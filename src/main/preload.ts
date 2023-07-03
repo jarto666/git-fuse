@@ -1,21 +1,20 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-
-export type Channels = 'ipc-example' | 'ping';
+import { IpcRequest } from './IPC/ipcRequest';
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
-    sendMessage(channel: Channels, args: unknown[]) {
+    sendMessage<TReq>(channel: string, args: IpcRequest<TReq>) {
       ipcRenderer.send(channel, args);
     },
-    on(channel: Channels, func: (...args: unknown[]) => void) {
-      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
-        func(...args);
+    on<TResp>(channel: string, func: (args: TResp) => void) {
+      const subscription = (_event: IpcRendererEvent, args: TResp) =>
+        func(args);
       ipcRenderer.on(channel, subscription);
 
       return () => ipcRenderer.removeListener(channel, subscription);
     },
-    once(channel: Channels, func: (...args: unknown[]) => void) {
-      ipcRenderer.once(channel, (_event, ...args) => func(...args));
+    once<TResp>(channel: string, func: (args: TResp) => void) {
+      ipcRenderer.once(channel, (_event, args) => func(args));
     },
   },
 });

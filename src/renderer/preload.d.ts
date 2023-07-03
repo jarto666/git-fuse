@@ -1,16 +1,18 @@
-import { Channels } from 'main/preload';
+import { IpcRequest } from 'main/IPC/ipcRequest';
 
 declare global {
+  interface IpcRendererCustom {
+    sendMessage<TReq>(channel: string, args: IpcRequest<TReq>): void;
+    on<TResp>(
+      channel: string,
+      func: (args: TResp) => void
+    ): (() => void) | undefined;
+    once<TResp>(channel: string, func: (args: TResp) => void): void;
+  }
+
   interface Window {
     electron: {
-      ipcRenderer: {
-        sendMessage(channel: Channels, args: unknown[]): void;
-        on(
-          channel: string,
-          func: (...args: unknown[]) => void
-        ): (() => void) | undefined;
-        once(channel: string, func: (...args: unknown[]) => void): void;
-      };
+      ipcRenderer: IpcRendererCustom;
     };
   }
 }

@@ -14,7 +14,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { simpleGit, SimpleGit, CleanOptions, StatusResult } from 'simple-git';
+import { IpcChannelBase } from './IPC/ipcChannel';
+import { PingChannel } from './IPC/handlers/pingChannelHandler';
 
 export default class AppUpdater {
   constructor() {
@@ -25,20 +26,6 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
-
-ipcMain.on('ping', async (event, arg) => {
-  const git: SimpleGit = simpleGit('C:\\SyncSpace\\Projects\\el-react');
-  const stat = await git.status();
-  const x = stat?.files.map(a => a.path);
-  await new Promise(r => setTimeout(r, 7000));
-  event.reply('ping', x);
-});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -144,3 +131,11 @@ app
     });
   })
   .catch(console.log);
+
+const registerIpcChannels = (ipcChannels: IpcChannelBase[]) => {
+  ipcChannels.forEach((channel) =>
+    ipcMain.on(channel.name, (event, request) => channel.handle(event, request))
+  );
+};
+
+registerIpcChannels([new PingChannel()]);
