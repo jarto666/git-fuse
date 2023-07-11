@@ -1,10 +1,4 @@
-import {
-  MemoryRouter as Router,
-  Routes,
-  Route,
-  HashRouter,
-  Link,
-} from 'react-router-dom';
+import { Routes, Route, HashRouter, Link } from 'react-router-dom';
 import './App.css';
 import { useState } from 'react';
 import { IpcService } from './IPC/IpcService';
@@ -12,6 +6,16 @@ import {
   PingChannelRequest,
   PingChannelResponse,
 } from 'main/IPC/handlers/pingChannelHandler';
+
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import Layout from './pages/common/Layout';
+import { createTheme } from '@mui/material';
+import CustomTheme from './theme/theme';
+import { Provider } from 'react-redux';
+import AppReduxStore from './store/AppReduxStore';
 
 const Stand = () => {
   return <>Stand</>;
@@ -34,7 +38,6 @@ const Home = () => {
               'ping',
               { message: 'ping' }
             );
-            console.log(res);
             setx(res.answer);
           }}
         >
@@ -48,25 +51,14 @@ const Home = () => {
 
 export default function App() {
   return (
-    <HashRouter>
-      <div className="App">
-        <div className="menu">
-          <Link to="/">
-            <h2>Home</h2>
-          </Link>
-          <Link to="/one">
-            <h2>Stand</h2>
-          </Link>
-          <Link to="/two">
-            <h2>Sit</h2>
-          </Link>
-        </div>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/one" element={<Stand />} />
-          <Route path="/two" element={<Sit />} />
-        </Routes>
-      </div>
-    </HashRouter>
+    <>
+      <CustomTheme>
+        <Provider store={AppReduxStore}>
+          <Layout>
+            <div>Main content</div>
+          </Layout>
+        </Provider>
+      </CustomTheme>
+    </>
   );
 }

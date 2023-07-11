@@ -7,8 +7,6 @@ export abstract class IpcChannelBase<TRequest = {}, TResponse = {}> {
   protected abstract handleInternal(args?: TRequest): TResponse;
 
   handle(event: IpcMainEvent, request: IpcRequest<TRequest>): void {
-    console.warn(request.responseChannel);
-
     if (!request.responseChannel) {
       request.responseChannel = `${this.name}_response`;
     }
