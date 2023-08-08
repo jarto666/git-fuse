@@ -21,13 +21,14 @@ export const openReposSlice = createSlice({
       state: OpenReposStateInterface,
       action: PayloadAction<IRepository[]>
     ) => {
-      state.repos = action.payload;
+      state.repos = action.payload.slice().sort((a, b) => a.order - b.order);
       state.isLoading = false;
       state.isSuccessful = true;
     },
     getOpenedReposFailedAction: (state: OpenReposStateInterface) => {
       state.isSuccessful = false;
     },
+
     closeOpenedRepoRequestAction(
       state: OpenReposStateInterface,
       action: PayloadAction<{ id: string }>
@@ -36,13 +37,25 @@ export const openReposSlice = createSlice({
       state: OpenReposStateInterface,
       action: PayloadAction<IRepository[]>
     ) {
-      state.repos = action.payload;
+      state.repos = action.payload.slice().sort((a, b) => a.order - b.order);
       state.isLoading = false;
       state.isSuccessful = true;
     },
     closeOpenedRepoFailedAction(state: OpenReposStateInterface) {
       state.isSuccessful = false;
     },
+
+    setSelectedRepoRequestAction: (
+      state: OpenReposStateInterface,
+      action: PayloadAction<IRepository>
+    ) => {},
+    setSelectedRepoSuccessAction: (
+      state: OpenReposStateInterface,
+      action: PayloadAction<IRepository>
+    ) => {
+      state.selectedRepo = action.payload;
+    },
+    setSelectedRepoFailedAction: (state: OpenReposStateInterface) => {},
   },
 });
 
@@ -53,6 +66,9 @@ export const {
   closeOpenedRepoRequestAction,
   closeOpenedRepoSuccessAction,
   closeOpenedRepoFailedAction,
+  setSelectedRepoRequestAction,
+  setSelectedRepoSuccessAction,
+  setSelectedRepoFailedAction,
 } = openReposSlice.actions;
 
 export default openReposSlice.reducer;

@@ -24,9 +24,9 @@ const CloseButton = styled('div')((props: CloseButtonProps) => ({
   marginLeft: '5px',
 }));
 
-interface StyledTabProps extends TabProps {
+export interface StyledTabProps extends TabProps {
   selected?: boolean;
-  onClose: (tabId: string) => void;
+  onClose: (repo: any) => void;
 }
 
 const StyledTab = styled((props: StyledTabProps) => (

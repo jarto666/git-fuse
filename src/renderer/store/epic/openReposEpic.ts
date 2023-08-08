@@ -7,6 +7,9 @@ import {
   getOpenedReposFailedAction,
   getOpenedReposRequestAction,
   getOpenedReposSuccessAction,
+  setSelectedRepoFailedAction,
+  setSelectedRepoRequestAction,
+  setSelectedRepoSuccessAction,
 } from '../reducer/openReposSlice';
 import FakeRepositoryService from 'renderer/services/FakeRepositoryService';
 import { IRepository } from 'renderer/interface/IRepository';
@@ -45,6 +48,26 @@ export const closeOpenedRepoEpic = (action$: any, state$: any) => {
         }),
         catchError((err) => {
           return of(closeOpenedRepoFailedAction());
+        })
+      );
+    })
+  );
+};
+
+export const setSelectedRepoEpic = (action$: any, state$: any) => {
+  return action$.pipe(
+    ofType(setSelectedRepoRequestAction),
+    mergeMap((action: any) => {
+      return from(FakeRepositoryService.selectRepo(action.payload.id)).pipe(
+        map((response: any) => {
+          if (response) {
+            return setSelectedRepoSuccessAction(response);
+          } else {
+            throw response;
+          }
+        }),
+        catchError((err) => {
+          return of(setSelectedRepoFailedAction());
         })
       );
     })
