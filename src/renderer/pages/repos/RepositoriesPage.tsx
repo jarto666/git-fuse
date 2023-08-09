@@ -1,13 +1,15 @@
 import TopBar from './TopBar/topBar';
 import { useSelector } from 'react-redux';
 import { OpenReposStateInterface } from 'renderer/interface/redux/OpenReposStateInterface';
-import { styled } from '@mui/material';
+import { Theme, styled } from '@mui/material';
 import Deblur from '@mui/icons-material/Deblur';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import React, { useState } from 'react';
+import Split from '@uiw/react-split';
 
 const StyledRepositoryMainContainer = styled('div')`
   height: 100%;
@@ -18,7 +20,7 @@ const StyledRepositoryMainContainer = styled('div')`
 const StyledRepositoryMenu = styled('div')(
   ({ theme }) => `
   height: 100%;
-  width: 55px;
+  width: 65px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -64,10 +66,6 @@ const StyledRepositoriesView = styled('div')`
   height: 100%;
   width: 100%;
 `;
-const StyledRepositoryManager = styled('div')`
-  height: 100%;
-  width: 100%;
-`;
 
 const StyledDeblurIcon = styled(Deblur)(
   (props) => `
@@ -106,6 +104,93 @@ const StyledRestartAltIcon = styled(RestartAltIcon)`
 
 const StyledRepositoryMenuListItemLabel = styled('span')`
   font-size: 14px;
+`;
+
+interface RepositoryManagerProps {
+  children: React.ReactNode;
+}
+
+const RepositoryManager = (props: RepositoryManagerProps) => {
+  return <Split lineBar>{props.children}</Split>;
+};
+
+const StyledRepositoryManager = styled(RepositoryManager)`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
+const StyledRepositoryDataPanel = styled('div')(
+  (props) => `
+  box-sizing: border-box;
+  height: 100%;
+  width: 350px;
+  max-width: 700px;
+  min-width: 200px;
+  font-size: 14px;
+  flex: 1 1 auto;
+
+  border-right: 1px solid ${props.theme.palette.background.paper};
+`
+);
+
+const StyledRepositoryDataPanelGroupButton = styled('button')(
+  (props) => `
+  background-color: ${props.theme.actionArea.background};
+  color: ${props.theme.palette.text.primary};
+  cursor: pointer;
+  padding: 3px;
+  height: 30px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 14px;
+
+  :hover {
+    background-color: ${props.theme.actionArea.greyedOut};
+  }
+`
+);
+
+const StyledRepositoryDataPanelGroupContent = styled('div')<{
+  maxHeight: string;
+}>(
+  (props) => `
+  transition: max-height 0.2s ease-out;
+  max-height: ${props.maxHeight};
+  overflow: hidden;
+`
+);
+
+interface RepositoryDataPanelGroupProps {
+  label: string;
+  theme: Theme;
+}
+
+const RepositoryDataPanelGroup = (props: RepositoryDataPanelGroupProps) => {
+  const [maxHeight, setMaxHeight] = useState('0');
+
+  return (
+    <div style={{ borderBottom: '1px solid #444' }}>
+      <StyledRepositoryDataPanelGroupButton
+        onClick={() => setMaxHeight(maxHeight == '0' ? '100px' : '0')}
+      >
+        {props.label}
+      </StyledRepositoryDataPanelGroupButton>
+      <StyledRepositoryDataPanelGroupContent maxHeight={maxHeight}>
+        asdf asdf asdf
+      </StyledRepositoryDataPanelGroupContent>
+    </div>
+  );
+};
+
+const StyledRepositoryView = styled('div')`
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  height: 100%;
+  width: 100%;
 `;
 
 const RepositoriesPage = () => {
@@ -154,7 +239,13 @@ const RepositoriesPage = () => {
         </StyledRepositoryMenu>
         <StyledRepositoriesView>
           <TopBar></TopBar>
-          <StyledRepositoryManager></StyledRepositoryManager>
+          <StyledRepositoryManager>
+            <StyledRepositoryDataPanel>
+              <RepositoryDataPanelGroup label="+ Local"></RepositoryDataPanelGroup>
+              <RepositoryDataPanelGroup label="+ Remote"></RepositoryDataPanelGroup>
+            </StyledRepositoryDataPanel>
+            <StyledRepositoryView>fgjg</StyledRepositoryView>
+          </StyledRepositoryManager>
         </StyledRepositoriesView>
       </StyledRepositoryMainContainer>
       {/* <StyledAppBar position="relative">
