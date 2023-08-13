@@ -1,11 +1,4 @@
-import { Routes, Route, HashRouter, Link } from 'react-router-dom';
 import './App.css';
-import { useState } from 'react';
-import { IpcService } from './IPC/IpcService';
-import {
-  PingChannelRequest,
-  PingChannelResponse,
-} from 'main/IPC/handlers/pingChannelHandler';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
