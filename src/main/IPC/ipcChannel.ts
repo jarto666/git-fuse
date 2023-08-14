@@ -4,14 +4,17 @@ import { IpcRequest } from './ipcRequest';
 export abstract class IpcChannelBase<TRequest = {}, TResponse = {}> {
   abstract get name(): string;
 
-  protected abstract handleInternal(args?: TRequest): TResponse;
+  protected abstract handleInternal(args?: TRequest): Promise<TResponse>;
 
-  handle(event: IpcMainEvent, request: IpcRequest<TRequest>): void {
+  async handle(
+    event: IpcMainEvent,
+    request: IpcRequest<TRequest>
+  ): Promise<void> {
     if (!request.responseChannel) {
       request.responseChannel = `${this.name}_response`;
     }
 
-    const response = this.handleInternal(request.body);
+    const response = await this.handleInternal(request.body);
 
     event.sender.send(request.responseChannel, response);
   }

@@ -16,7 +16,10 @@ export class PingChannel extends IpcChannelBase<
     return 'ping';
   }
 
-  protected handleInternal(args: PingChannelRequest): PingChannelResponse {
+  protected async handleInternal(
+    args: PingChannelRequest
+  ): Promise<PingChannelResponse> {
+    console.warn(args);
     const res: PingChannelResponse = {
       answer: `pong - ${args.message}`,
     };
