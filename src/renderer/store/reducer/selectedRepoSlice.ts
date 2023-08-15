@@ -1,6 +1,5 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { IRepository } from 'renderer/interface/IRepository';
 import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
 import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
 
@@ -17,7 +16,7 @@ export const selectedRepoSlice = createSlice({
   reducers: {
     setSelectedRepoRequestAction: (
       state: SelectedRepoStateInterface,
-      action: PayloadAction<IRepositoryDetails>
+      action: PayloadAction<{ id: string }>
     ) => {
       state.isLoading = true;
     },

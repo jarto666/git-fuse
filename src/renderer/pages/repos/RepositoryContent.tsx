@@ -3,7 +3,6 @@ interface RepositoryContentProps {
 }
 
 const RepositoryContent = (props: RepositoryContentProps) => {
-  console.log(props.children);
   return <>{props.children}</>;
 };
 

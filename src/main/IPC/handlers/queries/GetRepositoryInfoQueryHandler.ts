@@ -3,7 +3,7 @@ import {
   GetRepositoryInfoChannelResponse as GetRepositoryInfoQueryResponse,
 } from 'shared/IPC/queries/GetRepositoryInfoQuery';
 import { IpcChannelBase } from '../../ipcChannel';
-import { SimpleGit, simpleGit, GitError } from 'simple-git';
+import { SimpleGit, simpleGit } from 'simple-git';
 
 export class GetRepositoryInfoQueryChannel extends IpcChannelBase<
   GetRepositoryInfoQueryRequest,

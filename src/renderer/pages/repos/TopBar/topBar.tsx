@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import StyledTab from 'renderer/framework/Tabs/StyledTab';
 import StyledTabs from 'renderer/framework/Tabs/StyledTabs';
@@ -10,17 +10,10 @@ import {
   closeOpenedRepoRequestAction,
   setSelectedRepoRequestAction,
 } from 'renderer/store/reducer/openReposSlice';
-import {
-  getSelectedRepoRequestAction,
-  setSelectedRepoCancelAction,
-} from 'renderer/store/reducer/selectedRepoSlice';
-import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
+import { getSelectedRepoRequestAction } from 'renderer/store/reducer/selectedRepoSlice';
 
 const TopBar = () => {
   const navigate = useNavigate();
-
-  const location = useLocation();
-  console.log(location.pathname);
 
   const openedReposState = useSelector<any, OpenReposStateInterface>(
     (state: any) => state.openRepos
@@ -39,7 +32,9 @@ const TopBar = () => {
     ) {
       dispatch(setSelectedRepoRequestAction(openedReposState.repos[0]));
       // dispatch(setSelectedRepoCancelAction());
-      dispatch(getSelectedRepoRequestAction(openedReposState.repos[0]));
+      dispatch(
+        getSelectedRepoRequestAction({ id: openedReposState.repos[0].id })
+      );
     }
   }, [openedReposState.repos]);
 
@@ -54,7 +49,7 @@ const TopBar = () => {
           ) => {
             dispatch(setSelectedRepoRequestAction(value));
             // dispatch(setSelectedRepoCancelAction());
-            dispatch(getSelectedRepoRequestAction(value));
+            dispatch(getSelectedRepoRequestAction({ id: value.id }));
             navigate(`/repos/${value.id}`, {
               // relative: 'route',
             });
@@ -69,7 +64,6 @@ const TopBar = () => {
                 value={repo}
                 label={repo.name}
                 onClose={(repo) => {
-                  console.log('close tab: ' + repo.id);
                   if (openedReposState.selectedRepository === repo) {
                     dispatch(
                       getSelectedRepoRequestAction(

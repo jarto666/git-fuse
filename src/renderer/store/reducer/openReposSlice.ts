@@ -7,7 +7,7 @@ const initialState: OpenReposStateInterface = {
   repos: [],
   isLoading: false,
   isSuccessful: false,
-  error: {},
+  error: undefined,
   selectedRepository: undefined,
 };
 

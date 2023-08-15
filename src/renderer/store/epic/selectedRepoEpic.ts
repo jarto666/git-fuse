@@ -6,11 +6,9 @@ import {
   getSelectedRepoSuccessAction,
   getSelectedRepoFailedAction,
 } from '../reducer/selectedRepoSlice';
-import { IRepository } from 'renderer/interface/IRepository';
 import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
 
 export const getSelectedRepoEpic = (action$: any) => {
-  console.warn('setSelectedRepoEpic');
   return action$.pipe(
     ofType(getSelectedRepoRequestAction),
     switchMap((action: any) => {
