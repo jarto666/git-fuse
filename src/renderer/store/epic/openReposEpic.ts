@@ -58,7 +58,7 @@ export const setSelectedRepoEpic = (action$: any, state$: any) => {
   return action$.pipe(
     ofType(setSelectedRepoRequestAction),
     mergeMap((action: any) => {
-      return from(FakeRepositoryService.selectRepo(action.payload.id)).pipe(
+      return from(FakeRepositoryService.setSelected(action.payload.id)).pipe(
         map((response: any) => {
           if (response) {
             return setSelectedRepoSuccessAction(response);

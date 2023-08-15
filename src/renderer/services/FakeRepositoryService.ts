@@ -22,6 +22,8 @@ export default class FakeRepositoryService {
     },
   ];
 
+  static selectedRepo = this.repos[0];
+
   static getOpenedRepos = () => {
     // FakeRepositoryService.repos = [...FakeRepositoryService.repos].sort(
     //   (a, b) => a.order - b.order
@@ -29,7 +31,7 @@ export default class FakeRepositoryService {
     let responseData: IRepository[] = FakeRepositoryService.repos;
 
     return new Promise<IRepository[]>((resolve, _) => {
-      setTimeout(resolve, 1000, responseData);
+      setTimeout(resolve, 0, responseData);
     }).catch((err) => {
       throw new Error(err);
     });
@@ -47,10 +49,23 @@ export default class FakeRepositoryService {
     });
   };
 
-  static selectRepo = (id: string) => {
+  static setSelected = (id: string): Promise<IRepository> => {
+    console.warn(id);
+
+    let repo = FakeRepositoryService.repos.find((x) => x.id === id);
+    console.warn(repo);
+    return new Promise<IRepository>((resolve, _) => {
+      FakeRepositoryService.selectedRepo = repo!;
+      setTimeout(resolve, 0, FakeRepositoryService.selectedRepo);
+    }).catch((err) => {
+      throw new Error(err);
+    });
+  };
+
+  static getById = (id: string): Promise<IRepository> => {
     let responseData = FakeRepositoryService.repos.find((x) => x.id === id);
-    return new Promise((resolve, _) => {
-      setTimeout(resolve, 0, responseData);
+    return new Promise<IRepository>((resolve, _) => {
+      setTimeout(resolve, 2000, responseData);
     }).catch((err) => {
       throw new Error(err);
     });

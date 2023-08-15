@@ -4,9 +4,6 @@ export const RepositoryActionsPanel = () => {
   return (
     <>
       <S.RepositoryActionsPanel>
-        <S.RepositoryActionHome>
-          <S.HomeIcon></S.HomeIcon>
-        </S.RepositoryActionHome>
         <S.RepositoryActionList>
           <S.RepositoryActionListItem>
             <S.PullIcon></S.PullIcon>
