@@ -16,7 +16,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { IpcChannelBase } from './IPC/ipcChannel';
 import { PingChannel } from './IPC/handlers/pingChannelHandler';
-import { GetGitInfoChannel } from './IPC/handlers/getGitInfoHandler';
+import { GetRepositoryInfoQueryChannel } from './IPC/handlers/queries/GetRepositoryInfoQueryHandler';
 
 export default class AppUpdater {
   constructor() {
@@ -142,4 +142,4 @@ const registerIpcChannels = (ipcChannels: IpcChannelBase[]) => {
   );
 };
 
-registerIpcChannels([new PingChannel(), new GetGitInfoChannel()]);
+registerIpcChannels([new PingChannel(), new GetRepositoryInfoQueryChannel()]);

@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
 import { IpcService } from 'renderer/IPC/IpcService';
+import {
+  GetGitInfoChannelRequest,
+  GetGitInfoChannelResponse,
+} from 'shared/IPC/queries/GetRepositoryInfoQuery';
 import { BranchSummary } from 'simple-git';
 
 export type RepositoryViewPanelProps = {};
 
 type Props = RepositoryViewPanelProps & React.ComponentPropsWithoutRef<'div'>;
-
-export type GetGitInfoChannelRequest = {};
-
-export type GetGitInfoChannelResponse = {
-  answer: BranchSummary;
-};
 
 export const RepositoryViewPanel = (props: Props) => {
   let ipc = new IpcService();
