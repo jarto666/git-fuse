@@ -10,6 +10,11 @@ import {
   closeOpenedRepoRequestAction,
   setSelectedRepoRequestAction,
 } from 'renderer/store/reducer/openReposSlice';
+import {
+  getSelectedRepoRequestAction,
+  setSelectedRepoCancelAction,
+} from 'renderer/store/reducer/selectedRepoSlice';
+import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
 
 const TopBar = () => {
   const navigate = useNavigate();
@@ -28,24 +33,28 @@ const TopBar = () => {
 
   useEffect(() => {
     if (
-      !openedReposState.selectedRepo &&
+      !openedReposState.selectedRepository &&
       openedReposState?.repos &&
       openedReposState?.repos.length > 0
     ) {
       dispatch(setSelectedRepoRequestAction(openedReposState.repos[0]));
+      // dispatch(setSelectedRepoCancelAction());
+      dispatch(getSelectedRepoRequestAction(openedReposState.repos[0]));
     }
   }, [openedReposState.repos]);
 
   return (
     <>
-      {openedReposState.selectedRepo && (
+      {openedReposState.selectedRepository && (
         <StyledTabs
-          value={openedReposState.selectedRepo}
+          value={openedReposState.selectedRepository}
           onChange={(
             _: React.SyntheticEvent<Element, Event>,
             value: IRepository
           ) => {
             dispatch(setSelectedRepoRequestAction(value));
+            // dispatch(setSelectedRepoCancelAction());
+            dispatch(getSelectedRepoRequestAction(value));
             navigate(`/repos/${value.id}`, {
               // relative: 'route',
             });
@@ -54,16 +63,16 @@ const TopBar = () => {
           {openedReposState.repos.map((repo: IRepository) => {
             return (
               <StyledTab
-                selected={repo === openedReposState.selectedRepo}
+                selected={repo === openedReposState.selectedRepository}
                 key={repo.id}
                 id={`${repo.id}`}
                 value={repo}
                 label={repo.name}
                 onClose={(repo) => {
                   console.log('close tab: ' + repo.id);
-                  if (openedReposState.selectedRepo === repo) {
+                  if (openedReposState.selectedRepository === repo) {
                     dispatch(
-                      setSelectedRepoRequestAction(
+                      getSelectedRepoRequestAction(
                         openedReposState.repos[
                           openedReposState.repos.findIndex((x) => x === repo) -
                             1

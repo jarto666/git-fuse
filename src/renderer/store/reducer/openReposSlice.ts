@@ -8,6 +8,7 @@ const initialState: OpenReposStateInterface = {
   isLoading: false,
   isSuccessful: false,
   error: {},
+  selectedRepository: undefined,
 };
 
 export const openReposSlice = createSlice({
@@ -53,7 +54,7 @@ export const openReposSlice = createSlice({
       state: OpenReposStateInterface,
       action: PayloadAction<IRepository>
     ) => {
-      state.selectedRepo = action.payload;
+      state.selectedRepository = action.payload;
     },
     setSelectedRepoFailedAction: (state: OpenReposStateInterface) => {},
   },

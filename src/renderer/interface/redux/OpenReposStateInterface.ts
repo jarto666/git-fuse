@@ -3,5 +3,5 @@ import { CommonStateInterface } from './CommonStateInterface';
 
 export interface OpenReposStateInterface extends CommonStateInterface {
   repos: Array<IRepository>;
-  selectedRepo?: IRepository;
+  selectedRepository?: IRepository;
 }

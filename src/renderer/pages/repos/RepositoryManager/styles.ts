@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 
 import { RepositoryDataPanel } from './DataPanel/repositoryDataPanel';
-import { RepositoryViewPanel } from './RepositoryView/repositoryView';
+import { RepositoryMainPanel } from './RepositoryMain/repositoryMain';
 
 export namespace Styles {
   export const DataPanel = styled(RepositoryDataPanel)(
@@ -18,7 +18,7 @@ export namespace Styles {
   `
   );
 
-  export const RepositoryView = styled(RepositoryViewPanel)`
+  export const RepositoryView = styled(RepositoryMainPanel)`
     box-sizing: border-box;
     flex: 1 1 auto;
     height: 100%;

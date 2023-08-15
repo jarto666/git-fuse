@@ -33,6 +33,7 @@ export namespace Styles {
   );
   export const RepositoryActionList = styled('div')`
     height: 100%;
+    width: 65px;
     display: flex;
     flex-direction: column;
     justify-content: center;

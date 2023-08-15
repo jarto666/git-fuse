@@ -4,9 +4,14 @@ import {
   openReposEpic,
   setSelectedRepoEpic,
 } from './openReposEpic';
+import { getSelectedRepoEpic } from './selectedRepoEpic';
 
 export const rootEpic = combineEpics(
+  // open repos
   openReposEpic,
   closeOpenedRepoEpic,
-  setSelectedRepoEpic
+  setSelectedRepoEpic,
+
+  // selected repo
+  getSelectedRepoEpic
 );

@@ -5,7 +5,7 @@ export type RepositoryManagerProps = {} & SplitProps;
 
 export const RepositoryManager = (props: RepositoryManagerProps) => {
   return (
-    <Split {...props} lineBar>
+    <Split {...props} lineBar style={{ width: '100%' }}>
       <S.DataPanel />
       <S.RepositoryView />
     </Split>

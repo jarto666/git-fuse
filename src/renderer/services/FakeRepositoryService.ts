@@ -1,4 +1,10 @@
+import { IpcService } from 'renderer/IPC/IpcService';
 import { IRepository } from 'renderer/interface/IRepository';
+import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
+import {
+  GetRepositoryInfoChannelRequest,
+  GetRepositoryInfoChannelResponse,
+} from 'shared/IPC/queries/GetRepositoryInfoQuery';
 
 export default class FakeRepositoryService {
   static repos = <IRepository[]>[
@@ -17,10 +23,12 @@ export default class FakeRepositoryService {
     {
       id: 'ID3',
       order: 3,
-      name: 'dart-tutorial',
-      path: `C:\\SyncSpace\\Projects\\dart-tutorial`,
+      name: 'medicine_tracker',
+      path: `C:\\SyncSpace\\Projects\\medicine_tracker`,
     },
   ];
+
+  static selectedRepo = this.repos[0];
 
   static getOpenedRepos = () => {
     // FakeRepositoryService.repos = [...FakeRepositoryService.repos].sort(
@@ -29,7 +37,7 @@ export default class FakeRepositoryService {
     let responseData: IRepository[] = FakeRepositoryService.repos;
 
     return new Promise<IRepository[]>((resolve, _) => {
-      setTimeout(resolve, 1000, responseData);
+      setTimeout(resolve, 0, responseData);
     }).catch((err) => {
       throw new Error(err);
     });
@@ -47,10 +55,36 @@ export default class FakeRepositoryService {
     });
   };
 
-  static selectRepo = (id: string) => {
-    let responseData = FakeRepositoryService.repos.find((x) => x.id === id);
-    return new Promise((resolve, _) => {
-      setTimeout(resolve, 0, responseData);
+  static setSelected = (id: string): Promise<IRepository> => {
+    console.warn(id);
+
+    let repo = FakeRepositoryService.repos.find((x) => x.id === id);
+    console.warn(repo);
+    return new Promise<IRepository>((resolve, _) => {
+      FakeRepositoryService.selectedRepo = repo!;
+      setTimeout(resolve, 0, FakeRepositoryService.selectedRepo);
+    }).catch((err) => {
+      throw new Error(err);
+    });
+  };
+
+  static getById = async (id: string): Promise<IRepositoryDetails> => {
+    let repo = FakeRepositoryService.repos.find((x) => x.id === id);
+
+    let ipc = new IpcService();
+    const response = await ipc.send<
+      GetRepositoryInfoChannelRequest,
+      GetRepositoryInfoChannelResponse
+    >('get-git-info', {
+      path: repo!.path,
+    });
+
+    return new Promise<IRepositoryDetails>((resolve, reject) => {
+      if (response.error) {
+        reject(response.error);
+      } else {
+        setTimeout(resolve, 2000, response.repository);
+      }
     }).catch((err) => {
       throw new Error(err);
     });
