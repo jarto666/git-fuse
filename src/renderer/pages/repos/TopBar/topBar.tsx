@@ -38,7 +38,7 @@ const TopBar = () => {
       openedReposState?.repos.length > 0
     ) {
       dispatch(setSelectedRepoRequestAction(openedReposState.repos[0]));
-      dispatch(setSelectedRepoCancelAction());
+      // dispatch(setSelectedRepoCancelAction());
       dispatch(getSelectedRepoRequestAction(openedReposState.repos[0]));
     }
   }, [openedReposState.repos]);
@@ -53,7 +53,7 @@ const TopBar = () => {
             value: IRepository
           ) => {
             dispatch(setSelectedRepoRequestAction(value));
-            dispatch(setSelectedRepoCancelAction());
+            // dispatch(setSelectedRepoCancelAction());
             dispatch(getSelectedRepoRequestAction(value));
             navigate(`/repos/${value.id}`, {
               // relative: 'route',

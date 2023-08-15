@@ -1,7 +1,10 @@
-import { BranchSummary } from 'simple-git';
+import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
 
-export type GetGitInfoChannelRequest = {};
+export type GetRepositoryInfoChannelRequest = {
+  path: string;
+};
 
-export type GetGitInfoChannelResponse = {
-  answer: BranchSummary;
+export type GetRepositoryInfoChannelResponse = {
+  repository?: IRepositoryDetails;
+  error?: string;
 };

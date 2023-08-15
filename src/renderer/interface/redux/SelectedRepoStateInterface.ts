@@ -1,6 +1,6 @@
-import { IRepository } from '../IRepository';
+import { IRepositoryDetails } from '../IRepositoryDetails';
 import { CommonStateInterface } from './CommonStateInterface';
 
 export interface SelectedRepoStateInterface extends CommonStateInterface {
-  repo?: IRepository;
+  repo?: IRepositoryDetails;
 }

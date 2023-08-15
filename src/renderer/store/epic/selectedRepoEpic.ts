@@ -7,6 +7,7 @@ import {
   getSelectedRepoFailedAction,
 } from '../reducer/selectedRepoSlice';
 import { IRepository } from 'renderer/interface/IRepository';
+import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
 
 export const getSelectedRepoEpic = (action$: any) => {
   console.warn('setSelectedRepoEpic');
@@ -14,7 +15,7 @@ export const getSelectedRepoEpic = (action$: any) => {
     ofType(getSelectedRepoRequestAction),
     switchMap((action: any) => {
       return from(FakeRepositoryService.getById(action.payload.id)).pipe(
-        map((response: IRepository) => {
+        map((response: IRepositoryDetails) => {
           if (response) {
             return getSelectedRepoSuccessAction(response);
           } else {
@@ -23,7 +24,7 @@ export const getSelectedRepoEpic = (action$: any) => {
         }),
         // takeUntil(action$.pipe(ofType(setSelectedRepoCancelAction))),
         catchError((err) => {
-          return of(getSelectedRepoFailedAction());
+          return of(getSelectedRepoFailedAction(err));
         })
       );
     })
