@@ -1,5 +1,7 @@
-import { styled } from '@mui/material';
+import { Collapse, styled } from '@mui/material';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
 
 const StyledRepositoryDataPanelGroupButton = styled('button')(
   (props) => `
@@ -20,35 +22,49 @@ const StyledRepositoryDataPanelGroupButton = styled('button')(
   `
 );
 
-const StyledRepositoryDataPanelGroupContent = styled('div')<{
-  maxHeight: string;
-}>(
-  (props) => `
-    transition: max-height 0.2s ease-out;
-    max-height: ${props.maxHeight};
-    overflow: hidden;
-  `
+const StyledDataItemContent = styled('div')(
+  ({ theme }) => `
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 3px 3px 3px 6px;
+  font-size: 12px;
+
+  :hover {
+    background-color: ${theme.actionArea.greyedOut};
+    cursor: pointer;
+  }
+`
 );
+
+const StyledCollapse = styled(Collapse)`
+  /* padding-left: 15px; */
+`;
 
 type RepositoryDataPanelGroupProps = {
   label: string;
+  data?: string[];
+  expanded?: boolean;
 } & React.ComponentPropsWithoutRef<'div'>;
 
 const RepositoryDataPanelGroup = (props: RepositoryDataPanelGroupProps) => {
-  const [maxHeight, setMaxHeight] = useState('0');
+  const [expanded, setExpanded] = useState(props.expanded);
 
   return (
-    <div {...props} style={{ borderBottom: '1px solid #444' }}>
+    <div className={props.className} style={{ borderBottom: '1px solid #444' }}>
       <StyledRepositoryDataPanelGroupButton
-        onClick={() => setMaxHeight(maxHeight == '0' ? '100px' : '0')}
+        onClick={() => setExpanded(!expanded)}
       >
         {props.label}
       </StyledRepositoryDataPanelGroupButton>
-      <StyledRepositoryDataPanelGroupContent maxHeight={maxHeight}>
-        <div>asdf</div>
-        <div>asdf</div>
-        <div>asdf</div>
-      </StyledRepositoryDataPanelGroupContent>
+      <StyledCollapse in={expanded}>
+        {props.data &&
+          props.data.map((x) => (
+            <>
+              <StyledDataItemContent>{x}</StyledDataItemContent>
+            </>
+          ))}
+      </StyledCollapse>
     </div>
   );
 };
@@ -56,10 +72,20 @@ const RepositoryDataPanelGroup = (props: RepositoryDataPanelGroupProps) => {
 type RepositoryDataPanelProps = {} & React.ComponentPropsWithoutRef<'div'>;
 
 export const RepositoryDataPanel = (props: RepositoryDataPanelProps) => {
+  const { repo, error } = useSelector<any, SelectedRepoStateInterface>(
+    (state: any) => state.selectedRepository
+  );
+
   return (
-    <div {...props}>
-      <RepositoryDataPanelGroup label="+ Local"></RepositoryDataPanelGroup>
-      <RepositoryDataPanelGroup label="+ Remote"></RepositoryDataPanelGroup>
+    <div className={props.className}>
+      <RepositoryDataPanelGroup
+        label="+ Local"
+        data={repo?.branches.local}
+      ></RepositoryDataPanelGroup>
+      <RepositoryDataPanelGroup
+        label="+ Remote"
+        data={repo?.branches.remotes?.flatMap((x) => x.branches)}
+      ></RepositoryDataPanelGroup>
     </div>
   );
 };

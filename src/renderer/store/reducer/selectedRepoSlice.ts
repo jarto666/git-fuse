@@ -19,6 +19,7 @@ export const selectedRepoSlice = createSlice({
       action: PayloadAction<{ id: string }>
     ) => {
       state.isLoading = true;
+      state.error = undefined;
     },
     setSelectedRepoSuccessAction: (
       state: SelectedRepoStateInterface,

@@ -4,6 +4,7 @@ import {
 } from 'shared/IPC/queries/GetRepositoryInfoQuery';
 import { IpcChannelBase } from '../../ipcChannel';
 import { SimpleGit, simpleGit } from 'simple-git';
+import { IRemote } from 'renderer/interface/IRepositoryDetails';
 
 export class GetRepositoryInfoQueryChannel extends IpcChannelBase<
   GetRepositoryInfoQueryRequest,
@@ -23,12 +24,14 @@ export class GetRepositoryInfoQueryChannel extends IpcChannelBase<
       const remoteBranches = (await git.branch(['-r'])).all;
       const path = await git.revparse(['--show-toplevel']);
       const stashes = (await git.stashList()).all.map((x) => x.message);
+      const remotes = await git.getRemotes();
+      const originUrl = await git.getConfig('remote.origin.url');
 
       const res: GetRepositoryInfoQueryResponse = {
         repository: {
           branches: {
             local: localBranches,
-            remote: remoteBranches,
+            remotes: [],
           },
           path,
           stashes,
