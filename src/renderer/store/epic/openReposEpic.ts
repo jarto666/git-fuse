@@ -12,7 +12,7 @@ import {
   setSelectedRepoSuccessAction,
 } from '../reducer/openReposSlice';
 import FakeRepositoryService from 'renderer/services/FakeRepositoryService';
-import { IRepository } from 'renderer/interface/IRepository';
+import { IRepository } from 'shared/interfaces/IRepository';
 
 export const openReposEpic = (action$: any, state$: any) => {
   return action$.pipe(

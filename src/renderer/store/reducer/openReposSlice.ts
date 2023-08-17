@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { IRepository } from 'renderer/interface/IRepository';
+import { IRepository } from 'shared/interfaces/IRepository';
 import { OpenReposStateInterface } from 'renderer/interface/redux/OpenReposStateInterface';
 
 const initialState: OpenReposStateInterface = {

@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import RepositoriesPage from '../repos/RepositoriesPage';
 
@@ -6,7 +5,7 @@ interface LayoutProps {
   children?: React.ReactNode;
 }
 
-const Layout = (props: LayoutProps) => {
+const Layout = (_: LayoutProps) => {
   return (
     <>
       {/* <Box> */}

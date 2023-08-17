@@ -96,7 +96,9 @@
     "setupFiles": [
       "./.erb/scripts/check-build-exists.ts"
     ],
-    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/*.spec.(ts|tsx)"
+    ],
     "testEnvironmentOptions": {
       "url": "http://localhost/"
     },
@@ -160,6 +162,7 @@
     "electron": "^18.2.3",
     "electron-builder": "^23.0.3",
     "electron-devtools-installer": "^3.2.0",
+    "electron-mock-ipc": "^0.3.12",
     "electron-notarize": "^1.2.1",
     "electron-rebuild": "^3.2.7",
     "electronmon": "^2.0.2",

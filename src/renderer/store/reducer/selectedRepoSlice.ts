@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
-import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
 import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
+import { IRepositoryDetails } from 'shared/interfaces/IRepositoryDetails';
 
 const initialState: SelectedRepoStateInterface = {
   repo: undefined,

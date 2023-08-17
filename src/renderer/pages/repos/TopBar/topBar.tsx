@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import StyledTab from 'renderer/framework/Tabs/StyledTab';
 import StyledTabs from 'renderer/framework/Tabs/StyledTabs';
-import { IRepository } from 'renderer/interface/IRepository';
+import { IRepository } from 'shared/interfaces/IRepository';
 import { OpenReposStateInterface } from 'renderer/interface/redux/OpenReposStateInterface';
 import {
   getOpenedReposRequestAction,

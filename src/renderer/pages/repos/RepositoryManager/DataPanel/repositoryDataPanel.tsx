@@ -1,7 +1,11 @@
+import { TreeItem, TreeView } from '@mui/lab';
 import { Collapse, styled } from '@mui/material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
+import { IRemotes } from 'shared/interfaces/IRepositoryDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const StyledRepositoryDataPanelGroupButton = styled('button')(
   (props) => `
@@ -41,13 +45,15 @@ const StyledCollapse = styled(Collapse)`
   /* padding-left: 15px; */
 `;
 
-type RepositoryDataPanelGroupProps = {
+type RepositoryDataPanelLocalBranchesGroupProps = {
   label: string;
   data?: string[];
   expanded?: boolean;
 } & React.ComponentPropsWithoutRef<'div'>;
 
-const RepositoryDataPanelGroup = (props: RepositoryDataPanelGroupProps) => {
+const RepositoryDataPanelLocalBranchesGroup = (
+  props: RepositoryDataPanelLocalBranchesGroupProps
+) => {
   const [expanded, setExpanded] = useState(props.expanded);
 
   return (
@@ -61,9 +67,66 @@ const RepositoryDataPanelGroup = (props: RepositoryDataPanelGroupProps) => {
         {props.data &&
           props.data.map((x) => (
             <>
-              <StyledDataItemContent>{x}</StyledDataItemContent>
+              <StyledDataItemContent key={x}>{x}</StyledDataItemContent>
             </>
           ))}
+      </StyledCollapse>
+    </div>
+  );
+};
+
+type RepositoryDataPanelRemoteBranchesGroupProps = {
+  label: string;
+  data?: IRemotes;
+  expanded?: boolean;
+} & React.ComponentPropsWithoutRef<'div'>;
+
+const RepositoryDataPanelRemoteBranchesGroup = (
+  props: RepositoryDataPanelRemoteBranchesGroupProps
+) => {
+  const [expanded, setExpanded] = useState(props.expanded);
+
+  return (
+    <div className={props.className} style={{ borderBottom: '1px solid #444' }}>
+      <StyledRepositoryDataPanelGroupButton
+        onClick={() => setExpanded(!expanded)}
+      >
+        {props.label}
+      </StyledRepositoryDataPanelGroupButton>
+      <StyledCollapse in={expanded}>
+        {/* {props.data &&
+          Object.keys(props.data).map((key) => {
+            return (
+              <ul>
+                {key}
+                {props.data![key].branches.map((br) => (
+                  <li>{br}</li>
+                ))}
+              </ul>
+            );
+          }, [])} */}
+        {/* {props.data &&
+          props.data.map((x) => (
+            <>
+              <StyledDataItemContent>{x}</StyledDataItemContent>
+            </>
+          ))} */}
+
+        <TreeView
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+        >
+          {props.data &&
+            Object.keys(props.data).map((key) => {
+              return (
+                <TreeItem nodeId={key} label={key} key={key}>
+                  {props.data![key].branches.map((x) => (
+                    <TreeItem nodeId={x} label={x} key={x} />
+                  ))}
+                </TreeItem>
+              );
+            }, [])}
+        </TreeView>
       </StyledCollapse>
     </div>
   );
@@ -78,14 +141,14 @@ export const RepositoryDataPanel = (props: RepositoryDataPanelProps) => {
 
   return (
     <div className={props.className}>
-      <RepositoryDataPanelGroup
+      <RepositoryDataPanelLocalBranchesGroup
         label="+ Local"
         data={repo?.branches.local}
-      ></RepositoryDataPanelGroup>
-      <RepositoryDataPanelGroup
+      ></RepositoryDataPanelLocalBranchesGroup>
+      <RepositoryDataPanelRemoteBranchesGroup
         label="+ Remote"
-        data={repo?.branches.remotes?.flatMap((x) => x.branches)}
-      ></RepositoryDataPanelGroup>
+        data={repo?.branches.remotes}
+      ></RepositoryDataPanelRemoteBranchesGroup>
     </div>
   );
 };

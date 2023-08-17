@@ -1,7 +1,8 @@
 import { IpcService } from 'renderer/IPC/IpcService';
-import { IRepository } from 'renderer/interface/IRepository';
-import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
+import { IRepository } from 'shared/interfaces/IRepository';
+import { IRepositoryDetails } from 'shared/interfaces/IRepositoryDetails';
 import {
+  GetRepositoryInfoChannelName,
   GetRepositoryInfoChannelRequest,
   GetRepositoryInfoChannelResponse,
 } from 'shared/IPC/queries/GetRepositoryInfoQuery';
@@ -72,7 +73,7 @@ export default class FakeRepositoryService {
     const response = await ipc.send<
       GetRepositoryInfoChannelRequest,
       GetRepositoryInfoChannelResponse
-    >('get-git-info', {
+    >(GetRepositoryInfoChannelName, {
       path: repo!.path,
     });
 

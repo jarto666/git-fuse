@@ -6,7 +6,7 @@ import {
   getSelectedRepoSuccessAction,
   getSelectedRepoFailedAction,
 } from '../reducer/selectedRepoSlice';
-import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
+import { IRepositoryDetails } from 'shared/interfaces/IRepositoryDetails';
 
 export const getSelectedRepoEpic = (action$: any) => {
   return action$.pipe(

@@ -25,16 +25,18 @@ export const RepositoryMainPanel = (props: Props) => {
           </ul>
           <ul>
             Remote branches:
-            {selectedRepoState.repo?.branches.remotes
-              .flatMap((x) => x.branches)
-              .map((x) => (
-                <li key={x}>{x}</li>
-              ))}
+            {selectedRepoState.repo &&
+              Object.keys(selectedRepoState.repo!.branches.remotes).map(
+                (key) => {
+                  return <ul key={key}>{key}</ul>;
+                },
+                []
+              )}
           </ul>
           <ul>
             Stashes:
             {selectedRepoState.repo?.stashes.map((x) => (
-              <li key={x}>{x}</li>
+              <li key={x.id}>{x.message}</li>
             ))}
           </ul>
         </>

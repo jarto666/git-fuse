@@ -1,4 +1,4 @@
-import { IRepository } from '../IRepository';
+import { IRepository } from '../../../shared/interfaces/IRepository';
 import { CommonStateInterface } from './CommonStateInterface';
 
 export interface OpenReposStateInterface extends CommonStateInterface {

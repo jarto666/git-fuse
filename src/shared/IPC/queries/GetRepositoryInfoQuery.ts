@@ -1,4 +1,6 @@
-import { IRepositoryDetails } from 'renderer/interface/IRepositoryDetails';
+import { IRepositoryDetails } from 'shared/interfaces/IRepositoryDetails';
+
+export const GetRepositoryInfoChannelName = 'get-repository-info';
 
 export type GetRepositoryInfoChannelRequest = {
   path: string;
