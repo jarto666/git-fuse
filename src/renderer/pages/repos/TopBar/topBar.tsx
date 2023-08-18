@@ -11,6 +11,7 @@ import {
   setSelectedRepoRequestAction,
 } from 'renderer/store/reducer/openReposSlice';
 import { getSelectedRepoRequestAction } from 'renderer/store/reducer/selectedRepoSlice';
+import { Tooltip } from 'react-tooltip';
 
 const TopBar = () => {
   const navigate = useNavigate();

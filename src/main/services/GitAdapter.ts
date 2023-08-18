@@ -46,7 +46,6 @@ export class GitAdapter {
 
   async getStashes(): Promise<IStash[]> {
     const stashes = (await this._git.stashList()).all;
-    console.log(JSON.stringify(stashes));
 
     return stashes.map(
       (x) =>

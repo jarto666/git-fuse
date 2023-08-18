@@ -6,7 +6,6 @@ describe('index', () => {
     const result = await GetRepositoryInfoQueryChannelHandler({
       path: 'C:\\SyncSpace\\Projects\\el-react',
     });
-    console.log(JSON.stringify(result));
 
     expect(result).toBeTruthy();
   });

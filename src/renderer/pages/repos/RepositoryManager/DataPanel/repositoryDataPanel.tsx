@@ -113,7 +113,6 @@ const RepositoryDataPanelRemoteBranchesGroup = (
       }
     }
   }
-  console.log(remoteTreeMap);
 
   return (
     <div className={props.className} style={{ borderBottom: '1px solid #444' }}>
@@ -126,6 +125,7 @@ const RepositoryDataPanelRemoteBranchesGroup = (
         {remotes &&
           Object.keys(remotes).map((remote) => (
             <StyledTreeView
+              key={remote}
               disableSelection={true}
               defaultCollapseIcon={<ExpandMoreIcon />}
               defaultExpandIcon={<ChevronRightIcon />}

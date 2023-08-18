@@ -17,7 +17,6 @@ export type RepositoryViewProps = {
 };
 
 export const RepositoryView = (props: RepositoryViewProps) => {
-  console.log(props);
   return (
     <div className={props.className}>
       {!props.isLoading ? (
