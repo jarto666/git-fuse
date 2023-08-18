@@ -1,4 +1,4 @@
-import { IRemotes, IStash } from '../../shared/interfaces/IRepositoryDetails';
+import { IRemotes, IStash } from 'shared/interfaces/IRepositoryDetails';
 import simpleGit, { SimpleGit } from 'simple-git';
 
 export class GitAdapter {
