@@ -11,7 +11,6 @@ export const StyledTreeView = styled(TreeView)<StyledTreeViewProps>(
   (_) => `
 
   padding-top: 3px;
-  padding-left: 15px;
 
   .MuiTreeItem-group {
     padding-left: 0;
@@ -32,11 +31,11 @@ type StyledTreeItemProps = {
 export const StyledTreeItem = styled(TreeItem)<StyledTreeItemProps>(
   (props: StyledTreeItemProps) => `  
   .MuiTreeItem-content {
-    padding-left: ${props.level * 15}px;
+    padding-left: ${props.level * 15 + 15}px;
   }
 
   .MuiTreeItem-label {
-    font-size: 14px;
-  }
+    font-size: 14px !important;
+  }  
 `
 );

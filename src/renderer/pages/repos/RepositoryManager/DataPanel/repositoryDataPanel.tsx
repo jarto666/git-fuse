@@ -198,6 +198,7 @@ export const RepositoryDataPanel = (props: RepositoryDataPanelProps) => {
   return (
     <div className={props.className}>
       <RepositoryDataPanelLocalBranchesGroup
+        expanded
         label="+ Local"
         data={repo?.branches.local}
       ></RepositoryDataPanelLocalBranchesGroup>
