@@ -1,4 +1,4 @@
-import { GitAdapter } from 'main/services/GitAdapter';
+import { GitAdapter } from '../../../../main/services/GitAdapter';
 import {
   GetRepositoryInfoChannelRequest,
   GetRepositoryInfoChannelResponse,

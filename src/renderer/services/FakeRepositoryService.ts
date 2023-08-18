@@ -81,7 +81,7 @@ export default class FakeRepositoryService {
       if (response.error) {
         reject(response.error);
       } else {
-        setTimeout(resolve, 2000, response.repository);
+        setTimeout(resolve, 0, response.repository);
       }
     }).catch((err) => {
       throw new Error(err);

@@ -1,4 +1,3 @@
-import { TreeItem, TreeView } from '@mui/lab';
 import { Collapse, styled } from '@mui/material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -6,6 +5,10 @@ import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRep
 import { IRemotes } from 'shared/interfaces/IRepositoryDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import {
+  StyledTreeItem,
+  StyledTreeView,
+} from 'renderer/framework/TreeView/StyledTreeView';
 
 const StyledRepositoryDataPanelGroupButton = styled('button')(
   (props) => `
@@ -26,24 +29,17 @@ const StyledRepositoryDataPanelGroupButton = styled('button')(
   `
 );
 
-const StyledDataItemContent = styled('div')(
-  ({ theme }) => `
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  padding: 3px 3px 3px 6px;
-  font-size: 12px;
-
-  :hover {
-    background-color: ${theme.actionArea.greyedOut};
-    cursor: pointer;
-  }
-`
-);
-
 const StyledCollapse = styled(Collapse)`
   /* padding-left: 15px; */
 `;
+
+const buildTreeView = (node: BranchNode[]) => {
+  return node.map((x) => (
+    <StyledTreeItem nodeId={x.path} label={x.name} key={x.path} level={x.level}>
+      {x.children && buildTreeView(x.children)}
+    </StyledTreeItem>
+  ));
+};
 
 type RepositoryDataPanelLocalBranchesGroupProps = {
   label: string;
@@ -56,6 +52,20 @@ const RepositoryDataPanelLocalBranchesGroup = (
 ) => {
   const [expanded, setExpanded] = useState(props.expanded);
 
+  const localBranchTree: BranchNode = {
+    name: '',
+    path: '',
+    isFolder: true,
+    level: -1,
+  };
+  const localBranches = props.data;
+
+  if (localBranches) {
+    for (const branch of localBranches) {
+      buildTree(localBranchTree, '', branch, 0);
+    }
+  }
+
   return (
     <div className={props.className} style={{ borderBottom: '1px solid #444' }}>
       <StyledRepositoryDataPanelGroupButton
@@ -64,12 +74,12 @@ const RepositoryDataPanelLocalBranchesGroup = (
         {props.label}
       </StyledRepositoryDataPanelGroupButton>
       <StyledCollapse in={expanded}>
-        {props.data &&
-          props.data.map((x) => (
-            <>
-              <StyledDataItemContent key={x}>{x}</StyledDataItemContent>
-            </>
-          ))}
+        <StyledTreeView
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+        >
+          {buildTreeView(localBranchTree.children ?? [])}
+        </StyledTreeView>
       </StyledCollapse>
     </div>
   );
@@ -86,6 +96,25 @@ const RepositoryDataPanelRemoteBranchesGroup = (
 ) => {
   const [expanded, setExpanded] = useState(props.expanded);
 
+  const remotes = props.data;
+  const remoteTreeMap = {} as { [remote: string]: BranchNode };
+
+  if (remotes) {
+    for (const remote in remotes) {
+      const rootNode = {
+        name: '',
+        path: '',
+        isFolder: true,
+        level: -1,
+      } as BranchNode;
+      remoteTreeMap[remote] = rootNode;
+      for (const branch of remotes[remote].branches) {
+        buildTree(rootNode, '', branch, 1);
+      }
+    }
+  }
+  console.log(remoteTreeMap);
+
   return (
     <div className={props.className} style={{ borderBottom: '1px solid #444' }}>
       <StyledRepositoryDataPanelGroupButton
@@ -94,39 +123,23 @@ const RepositoryDataPanelRemoteBranchesGroup = (
         {props.label}
       </StyledRepositoryDataPanelGroupButton>
       <StyledCollapse in={expanded}>
-        {/* {props.data &&
-          Object.keys(props.data).map((key) => {
-            return (
-              <ul>
-                {key}
-                {props.data![key].branches.map((br) => (
-                  <li>{br}</li>
-                ))}
-              </ul>
-            );
-          }, [])} */}
-        {/* {props.data &&
-          props.data.map((x) => (
-            <>
-              <StyledDataItemContent>{x}</StyledDataItemContent>
-            </>
-          ))} */}
-
-        <TreeView
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-        >
-          {props.data &&
-            Object.keys(props.data).map((key) => {
-              return (
-                <TreeItem nodeId={key} label={key} key={key}>
-                  {props.data![key].branches.map((x) => (
-                    <TreeItem nodeId={x} label={x} key={x} />
-                  ))}
-                </TreeItem>
-              );
-            }, [])}
-        </TreeView>
+        {remotes &&
+          Object.keys(remotes).map((remote) => (
+            <StyledTreeView
+              disableSelection={true}
+              defaultCollapseIcon={<ExpandMoreIcon />}
+              defaultExpandIcon={<ChevronRightIcon />}
+            >
+              <StyledTreeItem
+                nodeId={remote}
+                key={remote}
+                label={remote}
+                level={0}
+              >
+                {buildTreeView(remoteTreeMap[remote]?.children ?? [])}
+              </StyledTreeItem>
+            </StyledTreeView>
+          ))}
       </StyledCollapse>
     </div>
   );
@@ -134,8 +147,51 @@ const RepositoryDataPanelRemoteBranchesGroup = (
 
 type RepositoryDataPanelProps = {} & React.ComponentPropsWithoutRef<'div'>;
 
+type BranchNode = {
+  level: number;
+  path: string;
+  name: string;
+  children?: BranchNode[];
+  isFolder: boolean;
+};
+
+const buildTree = (
+  root: BranchNode,
+  prefix: string,
+  path: string,
+  level: number
+) => {
+  const pathNodes = path.split('/');
+  const currentFolder = pathNodes[0];
+  const newPrefix = `${prefix}/${currentFolder}`;
+
+  const existingChild = root.children?.find((x) => x.name === currentFolder);
+  if (existingChild === undefined) {
+    const node: BranchNode = {
+      name: currentFolder,
+      path: newPrefix,
+      isFolder: pathNodes.length !== 1,
+      level,
+    };
+
+    if (root.children === undefined) {
+      root.children = [];
+    }
+
+    root.children.push(node);
+
+    if (!node.isFolder) return;
+
+    const newPath = path.substring(path.indexOf('/') + 1);
+    buildTree(node, newPrefix, newPath, level + 1);
+  } else {
+    const newPath = path.substring(path.indexOf('/') + 1);
+    buildTree(existingChild, newPrefix, newPath, level + 1);
+  }
+};
+
 export const RepositoryDataPanel = (props: RepositoryDataPanelProps) => {
-  const { repo, error } = useSelector<any, SelectedRepoStateInterface>(
+  const { repo } = useSelector<any, SelectedRepoStateInterface>(
     (state: any) => state.selectedRepository
   );
 
