@@ -19,7 +19,7 @@ export const RepositoryManager = (props: RepositoryManagerProps) => {
   return (
     <Split {...props} lineBar style={{ width: '100%' }}>
       <S.DataPanel />
-      <S.RepositoryView />
+      <S.MainPanel />
     </Split>
   );
 };

@@ -37,6 +37,7 @@ export const GetRepositoryInfoQueryChannelHandler = async (
   const remoteBranches = await git.getBranchesRemote();
   const stashes = await git.getStashes();
   const path = await git.getPath();
+  const commits = await git.getLog();
 
   return {
     repository: {
@@ -46,6 +47,7 @@ export const GetRepositoryInfoQueryChannelHandler = async (
       },
       path: path,
       stashes: stashes,
+      commits: commits,
     },
   };
 };

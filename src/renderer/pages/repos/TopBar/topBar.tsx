@@ -50,9 +50,6 @@ const TopBar = () => {
           ) => {
             dispatch(setSelectedRepoRequestAction(value));
             dispatch(getRepositoryInfoRequestAction({ id: value.id }));
-            navigate(`/repos/${value.id}`, {
-              // relative: 'route',
-            });
           }}
         >
           {openedReposState.repos.map((repo: IRepository) => {
@@ -65,13 +62,18 @@ const TopBar = () => {
                 label={repo.name}
                 onClose={(repo) => {
                   if (openedReposState.selectedRepository === repo) {
+                    const currentRepoIndex = openedReposState.repos.findIndex(
+                      (x) => x === repo
+                    );
+                    const newRepo =
+                      openedReposState.repos[
+                        currentRepoIndex === 0
+                          ? currentRepoIndex + 1
+                          : currentRepoIndex - 1
+                      ];
+                    dispatch(setSelectedRepoRequestAction(newRepo));
                     dispatch(
-                      getRepositoryInfoRequestAction(
-                        openedReposState.repos[
-                          openedReposState.repos.findIndex((x) => x === repo) -
-                            1
-                        ]
-                      )
+                      getRepositoryInfoRequestAction({ id: newRepo.id })
                     );
                   }
 

@@ -18,7 +18,7 @@ export namespace Styles {
   `
   );
 
-  export const RepositoryView = styled(RepositoryMainPanel)`
+  export const MainPanel = styled(RepositoryMainPanel)`
     box-sizing: border-box;
     flex: 1 1 auto;
     height: 100%;

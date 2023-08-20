@@ -12,4 +12,5 @@ export interface IGitCommit {
   parentIds: string[];
   message: string;
   author: IGitCommitAuthor;
+  timestamp: Date;
 }

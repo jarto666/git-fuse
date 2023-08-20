@@ -1,3 +1,5 @@
+import { IGitCommit } from './IGitGraph';
+
 export interface IRemotes {
   [name: string]: IRemote;
 }
@@ -16,6 +18,7 @@ export interface IRepositoryDetails {
     };
   };
   stashes: IStash[];
+  commits: IGitCommit[];
 }
 
 export interface IStash {

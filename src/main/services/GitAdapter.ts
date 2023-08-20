@@ -1,3 +1,4 @@
+import { IGitCommit } from 'shared/interfaces/IGitGraph';
 import { IRemotes, IStash } from 'shared/interfaces/IRepositoryDetails';
 import simpleGit, { SimpleGit } from 'simple-git';
 
@@ -62,12 +63,62 @@ export class GitAdapter {
     return await this._git.revparse(['--show-toplevel']);
   }
 
-  async getGraph(): Promise<any> {
-    return await this._git.raw([
+  private async _getRawLogByKey(
+    key: string
+  ): Promise<{ [id: string]: string }> {
+    const commitLines = await this._git.raw([
       'log',
       '--all',
       '--graph',
-      '--pretty=format:"{ "id": "%H", "parentIds": "%P", "date": "%cI", "author": {"email": "%ae", "name": "%an"},"message": "%s"}"',
+      `--pretty=format:"%H:${key}"`,
     ]);
+
+    let values: { [id: string]: string } = {};
+    commitLines
+      .trim()
+      .split('\n')
+      .forEach((line) => {
+        if (!line.includes('*')) {
+          return;
+        }
+
+        const commitInfo = line.substring(
+          line.indexOf('"') + 1,
+          line.length - 1
+        );
+
+        values[commitInfo.split(':')[0]] = commitInfo.substring(
+          commitInfo.indexOf(':') + 1
+        );
+      });
+
+    return values;
+  }
+
+  // Retrieves one property after another. Can be optimized to return JSON from git log,
+  // but problem is that if any value contains quotes - it is hard to reformat JSON to escape them
+  async getLog(): Promise<IGitCommit[]> {
+    const messages = await this._getRawLogByKey('%s');
+    const authorName = await this._getRawLogByKey('%an');
+    const authorEmail = await this._getRawLogByKey('%ae');
+    const commitDate = await this._getRawLogByKey('%aI');
+    const parentIds = await this._getRawLogByKey('%P');
+
+    const result: IGitCommit[] = [];
+
+    for (const key in messages) {
+      result.push({
+        id: key,
+        message: messages[key],
+        parentIds: parentIds[key].split(' '),
+        author: {
+          name: authorName[key],
+          email: authorEmail[key],
+        },
+        timestamp: new Date(commitDate[key]),
+      });
+    }
+
+    return result;
   }
 }
