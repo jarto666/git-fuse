@@ -1,12 +1,13 @@
 import { IGitGraph } from 'shared/interfaces/IGitGraph';
 
-export const GetGitGraphQueryChannelName = 'get-git-graph';
+export const GetGitLogQueryChannelName = 'get-git-log';
 
-export type GetGitGraphQueryChannelRequest = {
+export type GetGitLogQueryChannelRequest = {
   path: string;
+  limit: number;
 };
 
-export type GetGitGraphQueryChannelResponse = {
+export type GetGitLogQueryChannelResponse = {
   graph?: IGitGraph;
   error?: string;
 };
