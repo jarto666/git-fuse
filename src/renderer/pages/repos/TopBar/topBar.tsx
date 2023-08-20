@@ -10,8 +10,9 @@ import {
   closeOpenedRepoRequestAction,
   setSelectedRepoRequestAction,
 } from 'renderer/store/reducer/openReposSlice';
-import { getSelectedRepoRequestAction } from 'renderer/store/reducer/selectedRepoSlice';
-import { Tooltip } from 'react-tooltip';
+import { getRepositoryInfoRequestAction } from 'renderer/store/reducer/selectedRepoSlice';
+
+export type TopBarProps = {};
 
 const TopBar = () => {
   const navigate = useNavigate();
@@ -32,9 +33,8 @@ const TopBar = () => {
       openedReposState?.repos.length > 0
     ) {
       dispatch(setSelectedRepoRequestAction(openedReposState.repos[0]));
-      // dispatch(setSelectedRepoCancelAction());
       dispatch(
-        getSelectedRepoRequestAction({ id: openedReposState.repos[0].id })
+        getRepositoryInfoRequestAction({ id: openedReposState.repos[0].id })
       );
     }
   }, [openedReposState.repos]);
@@ -49,8 +49,7 @@ const TopBar = () => {
             value: IRepository
           ) => {
             dispatch(setSelectedRepoRequestAction(value));
-            // dispatch(setSelectedRepoCancelAction());
-            dispatch(getSelectedRepoRequestAction({ id: value.id }));
+            dispatch(getRepositoryInfoRequestAction({ id: value.id }));
             navigate(`/repos/${value.id}`, {
               // relative: 'route',
             });
@@ -67,7 +66,7 @@ const TopBar = () => {
                 onClose={(repo) => {
                   if (openedReposState.selectedRepository === repo) {
                     dispatch(
-                      getSelectedRepoRequestAction(
+                      getRepositoryInfoRequestAction(
                         openedReposState.repos[
                           openedReposState.repos.findIndex((x) => x === repo) -
                             1

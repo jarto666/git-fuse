@@ -14,21 +14,21 @@ export const selectedRepoSlice = createSlice({
   name: 'selectedRepository',
   initialState,
   reducers: {
-    setSelectedRepoRequestAction: (
+    getRepositoryInfoRequestAction: (
       state: SelectedRepoStateInterface,
       action: PayloadAction<{ id: string }>
     ) => {
       state.isLoading = true;
       state.error = undefined;
     },
-    setSelectedRepoSuccessAction: (
+    getRepositoryInfoSuccessAction: (
       state: SelectedRepoStateInterface,
       action: PayloadAction<IRepositoryDetails>
     ) => {
       state.repo = action.payload;
       state.isLoading = false;
     },
-    setSelectedRepoFailedAction: (
+    getRepositoryInfoFailedAction: (
       state: SelectedRepoStateInterface,
       action: PayloadAction<Error>
     ) => {
@@ -36,17 +36,17 @@ export const selectedRepoSlice = createSlice({
       state.repo = undefined;
       state.error = { message: action.payload.message };
     },
-    setSelectedRepoCancelAction: (state: SelectedRepoStateInterface) => {
+    getRepositoryInfoCancelAction: (state: SelectedRepoStateInterface) => {
       state.isLoading = false;
     },
   },
 });
 
 export const {
-  setSelectedRepoRequestAction: getSelectedRepoRequestAction,
-  setSelectedRepoSuccessAction: getSelectedRepoSuccessAction,
-  setSelectedRepoFailedAction: getSelectedRepoFailedAction,
-  setSelectedRepoCancelAction: setSelectedRepoCancelAction,
+  getRepositoryInfoRequestAction,
+  getRepositoryInfoSuccessAction,
+  getRepositoryInfoFailedAction,
+  getRepositoryInfoCancelAction,
 } = selectedRepoSlice.actions;
 
 export default selectedRepoSlice.reducer;

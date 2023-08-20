@@ -67,7 +67,7 @@ export class GitAdapter {
       'log',
       '--all',
       '--graph',
-      '--pretty=format:"{ "id": "%H", "parentIds": "%P", "date": "%aI", "author": {"email": "%ae", "name": "%an"},"message": "%s"}"',
+      '--pretty=format:"{ "id": "%H", "parentIds": "%P", "date": "%cI", "author": {"email": "%ae", "name": "%an"},"message": "%s"}"',
     ]);
   }
 }
