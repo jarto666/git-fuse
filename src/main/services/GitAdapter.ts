@@ -67,7 +67,7 @@ export class GitAdapter {
       'log',
       '--all',
       '--graph',
-      '--pretty=format:"%h:%p:%s"',
+      '--pretty=format:"%H:%P:%s"',
     ]);
   }
 }
