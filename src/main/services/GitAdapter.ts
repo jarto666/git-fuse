@@ -61,4 +61,13 @@ export class GitAdapter {
   async getPath(): Promise<string> {
     return await this._git.revparse(['--show-toplevel']);
   }
+
+  async getGraph(): Promise<any> {
+    return await this._git.raw([
+      'log',
+      '--all',
+      '--graph',
+      '--pretty=format:"%h:%p:%s"',
+    ]);
+  }
 }
