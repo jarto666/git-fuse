@@ -1,4 +1,4 @@
-import { IGitCommit } from 'shared/interfaces/IGitGraph';
+import { IGitCommit, IGitHeadsInfo } from 'shared/interfaces/IGitGraph';
 import { IRemotes, IStash } from 'shared/interfaces/IRepositoryDetails';
 import simpleGit, { SimpleGit } from 'simple-git';
 
@@ -69,7 +69,7 @@ export class GitAdapter {
     const commitLines = await this._git.raw([
       'log',
       '--all',
-      '--graph',
+      '--date-order',
       `--pretty=format:"%H:${key}"`,
     ]);
 
@@ -78,10 +78,6 @@ export class GitAdapter {
       .trim()
       .split('\n')
       .forEach((line) => {
-        if (!line.includes('*')) {
-          return;
-        }
-
         const commitInfo = line.substring(
           line.indexOf('"') + 1,
           line.length - 1
@@ -95,14 +91,61 @@ export class GitAdapter {
     return values;
   }
 
+  async _getRemotes(): Promise<string[]> {
+    return (await this._git.raw(['remote'])).trim().split('\n');
+  }
+
+  async _getHeads(): Promise<HeadsInfo> {
+    const localHeadsRaw = await this._git.raw(['show-ref', '--heads']);
+    let values: HeadsInfo = {};
+    localHeadsRaw
+      .trim()
+      .split('\n')
+      .forEach((line) => {
+        const [hash, ref] = line.split(' ').filter((x) => x !== '');
+        values[hash] = values[hash] ?? {};
+        const branch = ref.substring(11);
+        values[hash][branch] = {
+          local: true,
+          remotes: [],
+        };
+      });
+
+    const remotes = await this._getRemotes();
+    for (const remote of remotes) {
+      const remoteHeadsRaw = await this._git.raw([
+        'ls-remote',
+        '--heads',
+        remote,
+      ]);
+      remoteHeadsRaw
+        .trim()
+        .split('\n')
+        .forEach((line) => {
+          const [hash, ref] = line.split('\t').filter((x) => x !== '');
+          values[hash] = values[hash] ?? {};
+          const branch = ref.substring(11);
+          values[hash][branch] = values[hash][branch] ?? {
+            local: false,
+            remotes: [],
+          };
+          values[hash][branch].remotes.push(remote);
+        });
+    }
+
+    return values;
+  }
+
   // Retrieves one property after another. Can be optimized to return JSON from git log,
   // but problem is that if any value contains quotes - it is hard to reformat JSON to escape them
   async getLog(): Promise<IGitCommit[]> {
     const messages = await this._getRawLogByKey('%s');
     const authorName = await this._getRawLogByKey('%an');
     const authorEmail = await this._getRawLogByKey('%ae');
-    const commitDate = await this._getRawLogByKey('%aI');
+    const commitDate = await this._getRawLogByKey('%cI');
     const parentIds = await this._getRawLogByKey('%P');
+
+    var heads = await this._getHeads();
 
     const result: IGitCommit[] = [];
 
@@ -116,9 +159,14 @@ export class GitAdapter {
           email: authorEmail[key],
         },
         timestamp: new Date(commitDate[key]),
+        heads: heads[key],
       });
     }
 
     return result;
   }
+}
+
+interface HeadsInfo {
+  [hash: string]: IGitHeadsInfo;
 }

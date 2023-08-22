@@ -7,10 +7,18 @@ export interface IGitCommitAuthor {
   name: string;
 }
 
+export interface IGitHeadsInfo {
+  [branch: string]: {
+    local: boolean;
+    remotes: string[];
+  };
+}
+
 export interface IGitCommit {
   id: string;
   parentIds: string[];
   message: string;
   author: IGitCommitAuthor;
   timestamp: Date;
+  heads?: IGitHeadsInfo;
 }
