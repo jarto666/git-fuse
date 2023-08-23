@@ -10,8 +10,8 @@ const valueToColorHex = (value: number): string => {
   const hue: number = (value % numColors) * (360 / numColors);
 
   function hueToRgb(t: number): number {
-    const p: number = 0.75; // You can adjust this value for different shades
-    const q: number = 0.25; // You can adjust this value for different shades
+    const p: number = 0.8; // You can adjust this value for different shades
+    const q: number = 0.2; // You can adjust this value for different shades
 
     t = t - Math.floor(t);
 
@@ -47,14 +47,16 @@ interface Point {
 
 class Vertex {
   static readonly OFFSET_X_GAP: number = 5;
-  static readonly RADIUS: number = 3;
+  static readonly RADIUS: number = 5;
   static readonly LINE_HEIGHT: number = 20;
 
   id: string;
   color: string;
   position: Point;
+  level: number;
 
   constructor(level: number, sequence: number, id: string) {
+    this.level = level;
     this.color = valueToColorHex(level);
     this.id = id;
 
@@ -91,7 +93,7 @@ class Edge {
   constructor(from: Vertex, to: Vertex, type: 'top' | 'bottom') {
     this.from = from;
     this.to = to;
-    this.color = to.color;
+    this.color = type === 'top' ? from.color : to.color;
     this.type = type;
   }
 
@@ -100,6 +102,7 @@ class Edge {
 
     context.beginPath();
     context.strokeStyle = this.color;
+    context.lineWidth = 2;
 
     context.moveTo(this.from.position.x, this.from.position.y);
 
@@ -109,11 +112,11 @@ class Edge {
       context.lineTo(this.to.position.x, this.to.position.y);
     } else if (this.type === 'top') {
       // MERGE
-      context.lineTo(this.from.position.x, this.to.position.y);
+      context.lineTo(this.from.position.x, this.to.position.y + 10);
       context.lineTo(this.to.position.x, this.to.position.y);
     } else {
       // BRANCH
-      context.lineTo(this.to.position.x, this.from.position.y);
+      context.lineTo(this.to.position.x, this.from.position.y - 10);
       context.lineTo(this.to.position.x, this.to.position.y);
     }
 
@@ -241,23 +244,25 @@ export const GraphViewer = (props: GraphViewerProps) => {
     ])
   );
 
-  const edges: Edge[] = commitNodes.flatMap((commitNode) => {
-    const childHash = commitNode.commit.id;
-    const childVertex = commitVertexMap[childHash];
-    const parentIds = commitNode.commit.parentIds;
-    const parentVertices = parentIds.map(
-      (parentId) => commitVertexMap[parentId]
-    );
+  const edges: Edge[] = commitNodes
+    .flatMap((commitNode) => {
+      const childHash = commitNode.commit.id;
+      const childVertex = commitVertexMap[childHash];
+      const parentIds = commitNode.commit.parentIds;
+      const parentVertices = parentIds.map(
+        (parentId) => commitVertexMap[parentId]
+      );
 
-    return parentVertices.map(
-      (parentVertex) =>
-        new Edge(
-          parentVertex,
-          childVertex,
-          parentIds.length > 1 ? 'top' : 'bottom'
-        )
-    );
-  });
+      return parentVertices.map(
+        (parentVertex) =>
+          new Edge(
+            parentVertex,
+            childVertex,
+            parentIds.length > 1 ? 'top' : 'bottom'
+          )
+      );
+    })
+    .sort((a, b) => a.to.level - b.to.level);
 
   return (
     <GraphCanvas>
