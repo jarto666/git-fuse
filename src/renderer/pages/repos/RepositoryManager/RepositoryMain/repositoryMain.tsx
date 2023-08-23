@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
+import { GraphViewer } from './GraphViewer/graphViewer';
 
 export type RepositoryMainPanelProps = {};
 
@@ -10,12 +11,20 @@ export const RepositoryMainPanel = (props: Props) => {
     (state: any) => state.selectedRepository
   );
 
+  let commits = selectedRepoState.repo && selectedRepoState.repo.commits;
+
+  if (!commits) {
+    return <div></div>;
+  }
+
   return (
     <div {...props}>
       {selectedRepoState.error ? (
         <span>Error: {selectedRepoState.error.message}</span>
       ) : (
-        <>jvbnkml</>
+        <div>
+          <GraphViewer commits={commits}></GraphViewer>
+        </div>
       )}
     </div>
   );

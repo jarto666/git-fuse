@@ -63,33 +63,7 @@ export class GitAdapter {
     return await this._git.revparse(['--show-toplevel']);
   }
 
-  private async _getRawLogByKey(
-    key: string
-  ): Promise<{ [id: string]: string }> {
-    const commitLines = await this._git.raw([
-      'log',
-      '--all',
-      '--date-order',
-      `--pretty=format:"%H:${key}"`,
-    ]);
-
-    let values: { [id: string]: string } = {};
-    commitLines
-      .trim()
-      .split('\n')
-      .forEach((line) => {
-        const commitInfo = line.substring(
-          line.indexOf('"') + 1,
-          line.length - 1
-        );
-
-        values[commitInfo.split(':')[0]] = commitInfo.substring(
-          commitInfo.indexOf(':') + 1
-        );
-      });
-
-    return values;
-  }
+  readonly COMMIT_INFO_DELIMITER: string = '.2[K~E&jnp+$F3@fy#KRzfg';
 
   async _getRemotes(): Promise<string[]> {
     return (await this._git.raw(['remote'])).trim().split('\n');
@@ -136,34 +110,53 @@ export class GitAdapter {
     return values;
   }
 
-  // Retrieves one property after another. Can be optimized to return JSON from git log,
-  // but problem is that if any value contains quotes - it is hard to reformat JSON to escape them
-  async getLog(): Promise<IGitCommit[]> {
-    const messages = await this._getRawLogByKey('%s');
-    const authorName = await this._getRawLogByKey('%an');
-    const authorEmail = await this._getRawLogByKey('%ae');
-    const commitDate = await this._getRawLogByKey('%cI');
-    const parentIds = await this._getRawLogByKey('%P');
+  async _getCommits(): Promise<IGitCommit[]> {
+    // var heads = await this._getHeads();
 
-    var heads = await this._getHeads();
+    const requestData = ['%H', '%P', '%cI', '%ae', '%an', '%s'];
+    const commitLines = await this._git.raw([
+      'log',
+      '--all',
+      '--date-order',
+      `--pretty=format:"${requestData.join(this.COMMIT_INFO_DELIMITER)}"`,
+    ]);
 
-    const result: IGitCommit[] = [];
+    let result: IGitCommit[] = [];
+    commitLines
+      .trim()
+      .split('\n')
+      .forEach((line) => {
+        const [
+          id,
+          parentIdsString,
+          commitDate,
+          authorEmail,
+          authorName,
+          subject,
+        ] = line
+          .substring(line.indexOf('"') + 1, line.length - 1)
+          .split(this.COMMIT_INFO_DELIMITER);
 
-    for (const key in messages) {
-      result.push({
-        id: key,
-        message: messages[key],
-        parentIds: parentIds[key].split(' '),
-        author: {
-          name: authorName[key],
-          email: authorEmail[key],
-        },
-        timestamp: new Date(commitDate[key]),
-        heads: heads[key],
+        result.push({
+          id,
+          message: subject,
+          parentIds: parentIdsString
+            .trim()
+            .split(' ')
+            .filter((x) => x),
+          author: {
+            name: authorName,
+            email: authorEmail,
+          },
+          timestamp: new Date(commitDate),
+          // heads: heads[id],
+        });
       });
-    }
 
     return result;
+  }
+  async getLog(): Promise<IGitCommit[]> {
+    return await this._getCommits();
   }
 }
 
