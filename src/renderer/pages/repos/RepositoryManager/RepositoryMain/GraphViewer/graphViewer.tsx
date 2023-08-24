@@ -131,7 +131,7 @@ const getNodes = (commits: IGitCommit[]): GraphNode[] => {
   let maxLevel = 0;
   const parentChildrenMap: Record<string, GraphNode[]> = {};
   const nodeList: GraphNode[] = [];
-  const levelMap: (GraphNode | undefined)[] = Array(20).fill(undefined);
+  const levelMap: (IGitCommit | undefined)[] = Array(100).fill(undefined);
   for (const commit of commits) {
     let newLevel;
     const children: GraphNode[] = parentChildrenMap[commit.id];
@@ -151,31 +151,29 @@ const getNodes = (commits: IGitCommit[]): GraphNode[] => {
 
     if (leftmostChild) {
       newLevel = leftmostChild.level;
+      levelMap[newLevel] = commit;
       for (let i = maxLevel - 1; i > 0; i--) {
-        if (!levelMap[i]) {
-          continue;
-        }
-
         if (
-          levelMap[i]?.commit.parentIds.every(
+          levelMap[i]!.parentIds.every(
             (pId) =>
               nodeList.some((x) => x.commit.id === pId) || pId === commit.id
           )
         ) {
           maxLevel--;
+          levelMap[i] = undefined;
         } else {
           break;
         }
       }
     } else {
       newLevel = maxLevel++;
+      levelMap[newLevel] = commit;
     }
 
     const newNode = {
       commit: commit,
       level: newLevel,
     };
-    levelMap[newLevel] = newNode;
 
     for (const parentId of commit.parentIds)
       parentChildrenMap[parentId] = [
@@ -218,8 +216,8 @@ const GraphCanvas = (props: GraphCanvasProps) => {
     <canvas
       //   style={{ borderRight: '1px solid white' }}
       ref={canvasRef}
-      width={200}
-      height={2000}
+      width={1200}
+      height={22000}
     />
   );
 };

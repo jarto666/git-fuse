@@ -24,6 +24,8 @@ export const RepositoryMainPanel = (props: Props) => {
     return <div></div>;
   }
 
+  console.log(commits);
+
   return (
     <div {...props}>
       {selectedRepoState.error ? (
