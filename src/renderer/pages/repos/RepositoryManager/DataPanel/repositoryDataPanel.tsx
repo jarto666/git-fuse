@@ -189,6 +189,29 @@ const buildTree = (
     buildTree(existingChild, newPrefix, newPath, level + 1);
   }
 };
+type DataPanelHeaderProps = {
+  label: string;
+} & React.ComponentPropsWithoutRef<'div'>;
+const StyledDataPanelHeader = styled((props: DataPanelHeaderProps) => (
+  <div className={props.className}>
+    <DataPanelHeaderLabel>{props.label}</DataPanelHeaderLabel>
+  </div>
+))`
+  background-color: #1e1e1e;
+  height: 25px;
+  font-size: 14px;
+  display: flex;
+  padding-left: 5px;
+  margin-bottom: 5px;
+`;
+
+const DataPanelHeaderLabel = styled(
+  (props: React.ComponentPropsWithoutRef<'div'>) => (
+    <div {...props}>{props.children}</div>
+  )
+)`
+  align-self: center;
+`;
 
 export const RepositoryDataPanel = (props: RepositoryDataPanelProps) => {
   const { repo } = useSelector<any, SelectedRepoStateInterface>(
@@ -197,6 +220,7 @@ export const RepositoryDataPanel = (props: RepositoryDataPanelProps) => {
 
   return (
     <div className={props.className}>
+      <StyledDataPanelHeader label="Data panel"></StyledDataPanelHeader>
       <RepositoryDataPanelLocalBranchesGroup
         expanded
         label="+ Local"

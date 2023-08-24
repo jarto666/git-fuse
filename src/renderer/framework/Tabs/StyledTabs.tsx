@@ -4,11 +4,10 @@ interface StyledTabsProps extends TabsProps {}
 
 const StyledTabs = styled((props: StyledTabsProps) => <Tabs {...props} />)(
   (props) => ({
-    // backgroundColor: `${props.theme.palette.background.paper}`,
-    // 'padding-top': '2px',
     width: '100%',
     height: '40px',
     minHeight: 'initial',
+    borderBottom: '1px solid #111',
     '> .MuiTabs-root': {
       height: '40px',
     },
