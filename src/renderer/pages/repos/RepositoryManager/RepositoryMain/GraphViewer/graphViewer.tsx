@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useEffect, useRef } from 'react';
 import { IGitCommit } from 'shared/interfaces/IGitGraph';
 
@@ -127,7 +127,8 @@ class Edge {
 
 type GraphNode = { commit: IGitCommit; level: number };
 
-const getNodes = (commits: IGitCommit[]): GraphNode[] => {
+// Version one of the algorithm which tries to stick all nodes to the left
+const getNodesLeftmost = (commits: IGitCommit[]): GraphNode[] => {
   let maxLevel = 0;
   const parentChildrenMap: Record<string, GraphNode[]> = {};
   const nodeList: GraphNode[] = [];
@@ -187,6 +188,43 @@ const getNodes = (commits: IGitCommit[]): GraphNode[] => {
   return nodeList;
 };
 
+// Version one of the algorithm which tries to avoid lots of edge bends
+const getNodesTopmost = (commits: IGitCommit[]): GraphNode[] => {
+  const nodeList: GraphNode[] = [];
+  let renderedCommits: Set<string> = new Set<string>();
+  const levelMap: (IGitCommit | undefined)[] = Array(100).fill(undefined);
+  for (const commit of commits) {
+    renderedCommits.add(commit.id);
+
+    let newLevel;
+    const topmostChild = nodeList.find((x) =>
+      x.commit.parentIds.some((pId) => pId === commit.id)
+    );
+
+    if (topmostChild && topmostChild.commit.parentIds[0] === commit.id) {
+      newLevel = topmostChild.level;
+      levelMap[newLevel] = commit;
+      for (let i = 0; i < levelMap.length; i++) {
+        if (levelMap[i]?.parentIds.every((pId) => renderedCommits.has(pId))) {
+          levelMap[i] = undefined;
+        }
+      }
+    } else {
+      newLevel = levelMap.indexOf(undefined);
+      levelMap[newLevel] = commit;
+    }
+
+    const newNode = {
+      commit: commit,
+      level: newLevel,
+    };
+
+    nodeList.push(newNode);
+  }
+
+  return nodeList;
+};
+
 type GraphCanvasProps = {
   children:
     | ((context: CanvasRenderingContext2D | null) => void)
@@ -212,14 +250,7 @@ const GraphCanvas = (props: GraphCanvasProps) => {
     }
   }, [children]);
 
-  return (
-    <canvas
-      //   style={{ borderRight: '1px solid white' }}
-      ref={canvasRef}
-      width={1200}
-      height={22000}
-    />
-  );
+  return <canvas ref={canvasRef} width={300} height={22000} />;
 };
 
 type GraphViewerProps = {
@@ -233,45 +264,55 @@ export const GraphViewer = (props: GraphViewerProps) => {
     return <div>----</div>;
   }
 
-  const commitNodes = getNodes(commits);
+  const commitNodes = useMemo(() => {
+    return getNodesTopmost(commits);
+  }, [commits]);
 
-  const commitVertexMap: Record<string, Vertex> = Object.fromEntries(
-    commitNodes.map((node, i) => [
-      node.commit.id,
-      new Vertex(node.level, i, node.commit.id),
-    ])
-  );
+  const commitVertexMap: Record<string, Vertex> = useMemo(() => {
+    return Object.fromEntries(
+      commitNodes.map((node, i) => [
+        node.commit.id,
+        new Vertex(node.level, i, node.commit.id),
+      ])
+    );
+  }, [commits]);
 
-  const edges: Edge[] = commitNodes
-    .flatMap((commitNode) => {
-      const childHash = commitNode.commit.id;
-      const childVertex = commitVertexMap[childHash];
-      const parentIds = commitNode.commit.parentIds;
-      const parentVertices = parentIds.map(
-        (parentId) => commitVertexMap[parentId]
-      );
+  const edges: Edge[] = useMemo(() => {
+    return commitNodes
+      .flatMap((commitNode) => {
+        const childHash = commitNode.commit.id;
+        const childVertex = commitVertexMap[childHash];
+        const parentIds = commitNode.commit.parentIds;
+        const parentVertices = parentIds.map(
+          (parentId) => commitVertexMap[parentId]
+        );
 
-      return parentVertices.map(
-        (parentVertex) =>
-          new Edge(
-            parentVertex,
-            childVertex,
-            parentIds.length > 1 ? 'top' : 'bottom'
-          )
-      );
-    })
-    .sort((a, b) => a.to.level - b.to.level);
+        return parentVertices.map(
+          (parentVertex) =>
+            new Edge(
+              parentVertex,
+              childVertex,
+              parentIds.length > 1 ? 'top' : 'bottom'
+            )
+        );
+      })
+      .sort((a, b) => a.to.level - b.to.level);
+  }, [commits]);
 
-  return (
-    <GraphCanvas>
-      {(context) => {
-        for (const edge of edges) {
-          edge.draw(context);
-        }
-        for (const commitId in commitVertexMap) {
-          commitVertexMap[commitId].draw(context);
-        }
-      }}
-    </GraphCanvas>
-  );
+  const GraphCanvasMemo = useMemo(() => {
+    return (
+      <GraphCanvas>
+        {(context) => {
+          for (const edge of edges) {
+            edge.draw(context);
+          }
+          for (const commitId in commitVertexMap) {
+            commitVertexMap[commitId].draw(context);
+          }
+        }}
+      </GraphCanvas>
+    );
+  }, [commits]);
+
+  return <>{GraphCanvasMemo}</>;
 };

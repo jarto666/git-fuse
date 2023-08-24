@@ -29,26 +29,17 @@ const theme = createTheme({
       main: '#e86be3',
     },
     background: {
-      default: '#0e120e',
-      paper: '#010703',
+      default: '#111',
+      paper: '#000000',
     },
     text: {
       primary: '#a9a3a6',
     },
   },
-  // components: {
-  //   MuiTabs: {
-  //     styleOverrides: {
-  //       indicator: {
-  //         height: 0,
-  //       },
-  //     },
-  //   },
-  // },
   actionArea: {
-    background: '#0e120e',
-    disabled: '#232923',
-    greyedOut: '#4f574f',
+    background: '#292929',
+    disabled: '#101010',
+    greyedOut: '#646464',
   },
 });
 

@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 
 interface StyledSplitProps {
   children: ReactNode[];
+  color?: string;
 }
 
 const StyledSplit = styled(
@@ -11,9 +12,9 @@ const StyledSplit = styled(
     <Split {...splitProps}>{children}</Split>
   )
 )(
-  (_) => `
+  (props) => `
   .w-split-line-bar div::after {
-    background-color: transparent;
+    background-color: ${props.color || 'transparent'};
   }
 `
 );

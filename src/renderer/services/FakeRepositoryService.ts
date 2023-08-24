@@ -23,9 +23,15 @@ export default class FakeRepositoryService {
     },
     {
       id: 'ID3',
-      order: 3,
+      order: 4,
       name: 'medicine_tracker',
       path: `C:\\SyncSpace\\Projects\\medicine_tracker`,
+    },
+    {
+      id: 'ID4',
+      order: 3,
+      name: 'training',
+      path: `C:\\SyncSpace\\Projects\\test\\training-manual`,
     },
   ];
 

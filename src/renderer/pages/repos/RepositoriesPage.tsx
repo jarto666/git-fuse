@@ -6,6 +6,7 @@ import Deblur from '@mui/icons-material/Deblur';
 import { RepositoryView } from './RepositoryView/repositoryView';
 import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
 import { useSelector } from 'react-redux';
+import { StyledRepositoryManager } from './styles';
 
 const StyledRepositoryMainContainer = styled('div')`
   height: 100%;
@@ -67,7 +68,8 @@ const RepositoriesPage = () => {
         </StyledRepositoriesTopPanel>
         <StyledRepositoryView isLoading={selectedRepoState.isLoading}>
           <RepositoryActionsPanel></RepositoryActionsPanel>
-          <RepositoryManager></RepositoryManager>
+          {/* <RepositoryManager></RepositoryManager> */}
+          <StyledRepositoryManager></StyledRepositoryManager>
         </StyledRepositoryView>
       </StyledRepositoryMainContainer>
     </>

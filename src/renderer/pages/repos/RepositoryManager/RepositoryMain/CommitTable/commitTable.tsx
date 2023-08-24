@@ -1,5 +1,7 @@
 import { styled } from '@mui/material';
+import { useContext } from 'react';
 import { IGitCommit } from 'shared/interfaces/IGitGraph';
+import WidthContext from '../commitTableWidthContext';
 
 type CommitTableProps = {
   commits: IGitCommit[];
@@ -12,7 +14,6 @@ const StyledCommitTable = styled('div')`
   grid-template-columns: repeat(3, auto);
   height: fit-content;
   font-size: 13px;
-  width: 100%;
   background-color: #111;
 `;
 
@@ -27,33 +28,38 @@ const StyledCommitTableRow = styled('div')`
 
 const StyledCommitTableCell = styled('div')`
   height: 20px;
-`;
-
-const StyledTableHeaders = styled('div')`
-  display: contents;
-  height: 20px;
-`;
-
-export const StyledTableHeader = styled('div')`
-  height: 20px;
-  background-color: #050505;
-  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 8px;
 `;
 
 export const CommitTable = (props: Props) => {
+  const widthContext = useContext(WidthContext);
+  if (!widthContext) {
+    return null;
+  }
+
+  const { headerWidths } = widthContext;
+
   return (
     <StyledCommitTable className={props.className}>
-      <StyledTableHeaders>
-        <StyledTableHeader>Message</StyledTableHeader>
-        <StyledTableHeader>Author Name</StyledTableHeader>
-        <StyledTableHeader>SHA</StyledTableHeader>
-      </StyledTableHeaders>
       {props.commits &&
         props.commits.map((commit) => (
-          <StyledCommitTableRow>
-            <StyledCommitTableCell>{commit.message}</StyledCommitTableCell>
-            <StyledCommitTableCell>{commit.author.name}</StyledCommitTableCell>
-            <StyledCommitTableCell>
+          <StyledCommitTableRow key={commit.id}>
+            <StyledCommitTableCell
+              style={{ width: `${headerWidths.messageHeader}px` }}
+            >
+              {commit.message}
+            </StyledCommitTableCell>
+            <StyledCommitTableCell
+              style={{ width: `${headerWidths.authorHeader}px` }}
+            >
+              {`${commit.author.name} <${commit.author.email}>`}
+            </StyledCommitTableCell>
+            <StyledCommitTableCell
+              style={{ width: `${headerWidths.shaHeader}px` }}
+            >
               {commit.id.substring(0, 6)}
             </StyledCommitTableCell>
           </StyledCommitTableRow>
