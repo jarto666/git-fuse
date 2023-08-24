@@ -216,7 +216,7 @@ const GraphCanvas = (props: GraphCanvasProps) => {
 
   return (
     <canvas
-      style={{ borderRight: '1px solid white' }}
+      //   style={{ borderRight: '1px solid white' }}
       ref={canvasRef}
       width={200}
       height={2000}

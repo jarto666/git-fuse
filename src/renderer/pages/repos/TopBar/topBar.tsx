@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import StyledTab from 'renderer/framework/Tabs/StyledTab';
 import StyledTabs from 'renderer/framework/Tabs/StyledTabs';
@@ -15,8 +14,6 @@ import { getRepositoryInfoRequestAction } from 'renderer/store/reducer/selectedR
 export type TopBarProps = {};
 
 const TopBar = () => {
-  const navigate = useNavigate();
-
   const openedReposState = useSelector<any, OpenReposStateInterface>(
     (state: any) => state.openRepos
   );

@@ -1,7 +1,8 @@
-import Split, { SplitProps } from '@uiw/react-split';
+import { SplitProps } from '@uiw/react-split';
 import { Styles as S } from './styles';
 import { useSelector } from 'react-redux';
 import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
+import StyledSplit from 'renderer/framework/Split/StyledSplit';
 
 export type RepositoryManagerProps = {} & SplitProps;
 
@@ -17,9 +18,9 @@ export const RepositoryManager = (props: RepositoryManagerProps) => {
   }
 
   return (
-    <Split {...props} lineBar style={{ width: '100%' }}>
+    <StyledSplit {...props} lineBar style={{ width: '100%' }}>
       <S.DataPanel />
       <S.MainPanel />
-    </Split>
+    </StyledSplit>
   );
 };

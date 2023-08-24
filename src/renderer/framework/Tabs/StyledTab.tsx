@@ -19,7 +19,7 @@ const CloseIconCustom = styled(CloseIcon)((props) => ({
 
 interface CloseButtonProps {}
 
-const CloseButton = styled('div')((props: CloseButtonProps) => ({
+const CloseButton = styled('div')((_: CloseButtonProps) => ({
   display: 'flex',
   marginLeft: '5px',
 }));
