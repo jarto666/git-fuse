@@ -2,8 +2,7 @@ import { styled } from '@mui/material/styles';
 
 import { RepositoryManager } from './RepositoryManager/repositoryManager';
 
-export namespace Styles {}
-
+// eslint-disable-next-line import/prefer-default-export
 export const StyledRepositoryManager = styled(RepositoryManager, {})`
   height: 100%;
   width: 100%;

@@ -1,12 +1,11 @@
-import TopBar from './TopBar/topBar';
 import { styled } from '@mui/material';
-import { RepositoryActionsPanel } from './RepositoryActions/repositoryActions';
-import { RepositoryManager } from './RepositoryManager/repositoryManager';
 import Deblur from '@mui/icons-material/Deblur';
-import { RepositoryView } from './RepositoryView/repositoryView';
 import { SelectedRepoStateInterface } from 'renderer/interface/redux/SelectedRepoStateInterface';
 import { useSelector } from 'react-redux';
+import TopBar from './TopBar/topBar';
+import { RepositoryActionsPanel } from './RepositoryActions/repositoryActions';
 import { StyledRepositoryManager } from './styles';
+import RepositoryView from './RepositoryView/repositoryView';
 
 const StyledRepositoryMainContainer = styled('div')`
   height: 100%;
@@ -62,14 +61,14 @@ const RepositoriesPage = () => {
       <StyledRepositoryMainContainer>
         <StyledRepositoriesTopPanel>
           <RepositoryActionHome>
-            <HomeIcon></HomeIcon>
+            <HomeIcon />
           </RepositoryActionHome>
-          <TopBar></TopBar>
+          <TopBar />
         </StyledRepositoriesTopPanel>
         <StyledRepositoryView isLoading={selectedRepoState.isLoading}>
-          <RepositoryActionsPanel></RepositoryActionsPanel>
+          <RepositoryActionsPanel />
           {/* <RepositoryManager></RepositoryManager> */}
-          <StyledRepositoryManager></StyledRepositoryManager>
+          <StyledRepositoryManager />
         </StyledRepositoryView>
       </StyledRepositoryMainContainer>
     </>

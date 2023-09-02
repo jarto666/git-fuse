@@ -6,9 +6,8 @@ import CallSplitIcon from '@mui/icons-material/CallSplit';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
-export namespace Styles {
-  export const RepositoryActionsPanel = styled('div')(
-    ({ theme }) => `
+export const StyledRepositoryActionsPanel = styled('div')(
+  ({ theme }) => `
       height: 100%;
       width: 65px;
       display: flex;
@@ -17,9 +16,10 @@ export namespace Styles {
     
       border-right: 1px solid ${theme.palette.background.paper};
     `
-  );
-  export const RepositoryActionHome = styled('div')(
-    ({ theme }) => `
+);
+
+export const StyledRepositoryActionHome = styled('div')(
+  ({ theme }) => `
       height: 40px;
       display: flex;
       justify-content: center;
@@ -30,16 +30,18 @@ export namespace Styles {
       border-bottom: 1px solid ${theme.palette.background.paper};
       background-color: ${theme.palette.background.paper};
     `
-  );
-  export const RepositoryActionList = styled('div')`
-    height: 100%;
-    width: 65px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  `;
-  export const RepositoryActionListItem = styled('div')(
-    ({ theme }) => `
+);
+
+export const StyledRepositoryActionList = styled('div')`
+  height: 100%;
+  width: 65px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const StyledRepositoryActionListItem = styled('div')(
+  ({ theme }) => `
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -51,44 +53,43 @@ export namespace Styles {
         cursor: pointer;
       }
     `
-  );
+);
 
-  export const HomeIcon = styled(Deblur)(
-    (props) => `
+export const StyledHomeIcon = styled(Deblur)(
+  (props) => `
       height: 40px;
         width: 30px;
       ':hover': {
         color: ${props.theme.palette.secondary.main},
       }
       `
-  );
+);
 
-  export const PullIcon = styled(GetAppIcon)`
-    height: 40px;
-    width: 30px;
-  `;
+export const StyledPullIcon = styled(GetAppIcon)`
+  height: 40px;
+  width: 30px;
+`;
 
-  export const PushIcon = styled(FileUploadIcon)`
-    height: 40px;
-    width: 30px;
-  `;
+export const StyledPushIcon = styled(FileUploadIcon)`
+  height: 40px;
+  width: 30px;
+`;
 
-  export const BranchIcon = styled(CallSplitIcon)`
-    height: 40px;
-    width: 30px;
-  `;
+export const StyledBranchIcon = styled(CallSplitIcon)`
+  height: 40px;
+  width: 30px;
+`;
 
-  export const StashIcon = styled(DraftsIcon)`
-    height: 40px;
-    width: 30px;
-  `;
+export const StyledStashIcon = styled(DraftsIcon)`
+  height: 40px;
+  width: 30px;
+`;
 
-  export const ResetIcon = styled(RestartAltIcon)`
-    height: 40px;
-    width: 30px;
-  `;
+export const StyledResetIcon = styled(RestartAltIcon)`
+  height: 40px;
+  width: 30px;
+`;
 
-  export const RepositoryActionListItemLabel = styled('span')`
-    font-size: 14px;
-  `;
-}
+export const StyledRepositoryActionListItemLabel = styled('span')`
+  font-size: 14px;
+`;

@@ -3,7 +3,9 @@ interface RepositoryContentProps {
 }
 
 const RepositoryContent = (props: RepositoryContentProps) => {
-  return <>{props.children}</>;
+  const { children } = props;
+
+  return <>{children}</>;
 };
 
 export default RepositoryContent;

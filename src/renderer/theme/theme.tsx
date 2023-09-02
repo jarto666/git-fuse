@@ -48,10 +48,11 @@ interface CustomThemeProps {
 }
 
 const CustomTheme = (props: CustomThemeProps) => {
+  const { children } = props;
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {props.children}
+      {children}
     </ThemeProvider>
   );
 };

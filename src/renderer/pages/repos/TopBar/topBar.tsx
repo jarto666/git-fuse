@@ -11,8 +11,6 @@ import {
 } from 'renderer/store/reducer/openReposSlice';
 import { getRepositoryInfoRequestAction } from 'renderer/store/reducer/selectedRepoSlice';
 
-export type TopBarProps = {};
-
 const TopBar = () => {
   const openedReposState = useSelector<any, OpenReposStateInterface>(
     (state: any) => state.openRepos
@@ -21,7 +19,7 @@ const TopBar = () => {
 
   useEffect(() => {
     dispatch(getOpenedReposRequestAction());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (
@@ -34,7 +32,7 @@ const TopBar = () => {
         getRepositoryInfoRequestAction({ id: openedReposState.repos[0].id })
       );
     }
-  }, [openedReposState.repos]);
+  }, [dispatch, openedReposState.repos, openedReposState.selectedRepository]);
 
   return (
     <>
@@ -57,10 +55,10 @@ const TopBar = () => {
                 id={`${repo.id}`}
                 value={repo}
                 label={repo.name}
-                onClose={(repo) => {
-                  if (openedReposState.selectedRepository === repo) {
+                onClose={(closedRepo) => {
+                  if (openedReposState.selectedRepository === closedRepo) {
                     const currentRepoIndex = openedReposState.repos.findIndex(
-                      (x) => x === repo
+                      (x) => x === closedRepo
                     );
                     const newRepo =
                       openedReposState.repos[
@@ -74,7 +72,7 @@ const TopBar = () => {
                     );
                   }
 
-                  dispatch(closeOpenedRepoRequestAction({ id: repo.id }));
+                  dispatch(closeOpenedRepoRequestAction({ id: closedRepo.id }));
                 }}
               />
             );

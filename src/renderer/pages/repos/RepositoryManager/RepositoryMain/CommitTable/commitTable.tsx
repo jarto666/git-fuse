@@ -34,18 +34,19 @@ const StyledCommitTableCell = styled('div')`
   padding-left: 8px;
 `;
 
-export const CommitTable = (props: Props) => {
+const CommitTable = (props: Props) => {
   const widthContext = useContext(WidthContext);
   if (!widthContext) {
     return null;
   }
 
   const { headerWidths } = widthContext;
+  const { commits, className } = props;
 
   return (
-    <StyledCommitTable className={props.className}>
-      {props.commits &&
-        props.commits.map((commit) => (
+    <StyledCommitTable className={className}>
+      {commits &&
+        commits.map((commit) => (
           <StyledCommitTableRow key={commit.id}>
             <StyledCommitTableCell
               style={{ width: `${headerWidths.messageHeader}px` }}
@@ -67,3 +68,5 @@ export const CommitTable = (props: Props) => {
     </StyledCommitTable>
   );
 };
+
+export default CommitTable;

@@ -33,128 +33,6 @@ const StyledCollapse = styled(Collapse)`
   /* padding-left: 15px; */
 `;
 
-const buildTreeView = (node: BranchNode[]) => {
-  return node.map((x) => (
-    <StyledTreeItem nodeId={x.path} label={x.name} key={x.path} level={x.level}>
-      {x.children && buildTreeView(x.children)}
-    </StyledTreeItem>
-  ));
-};
-
-type RepositoryDataPanelLocalBranchesGroupProps = {
-  label: string;
-  data?: string[];
-  expanded?: boolean;
-} & React.ComponentPropsWithoutRef<'div'>;
-
-const RepositoryDataPanelLocalBranchesGroup = (
-  props: RepositoryDataPanelLocalBranchesGroupProps
-) => {
-  const [expanded, setExpanded] = useState(props.expanded);
-
-  const localBranchTree: BranchNode = {
-    name: '',
-    path: '',
-    isFolder: true,
-    level: -1,
-  };
-  const localBranches = props.data;
-
-  if (localBranches) {
-    for (const branch of localBranches) {
-      buildTree(localBranchTree, '', branch, 0);
-    }
-  }
-
-  return (
-    <div className={props.className} style={{ borderBottom: '1px solid #444' }}>
-      <StyledRepositoryDataPanelGroupButton
-        onClick={() => setExpanded(!expanded)}
-      >
-        {props.label}
-      </StyledRepositoryDataPanelGroupButton>
-      <StyledCollapse in={expanded}>
-        <StyledTreeView
-          defaultCollapseIcon={<ExpandMoreIcon />}
-          defaultExpandIcon={<ChevronRightIcon />}
-        >
-          {buildTreeView(localBranchTree.children ?? [])}
-        </StyledTreeView>
-      </StyledCollapse>
-    </div>
-  );
-};
-
-type RepositoryDataPanelRemoteBranchesGroupProps = {
-  label: string;
-  data?: IRemotes;
-  expanded?: boolean;
-} & React.ComponentPropsWithoutRef<'div'>;
-
-const RepositoryDataPanelRemoteBranchesGroup = (
-  props: RepositoryDataPanelRemoteBranchesGroupProps
-) => {
-  const [expanded, setExpanded] = useState(props.expanded);
-
-  const remotes = props.data;
-  const remoteTreeMap = {} as { [remote: string]: BranchNode };
-
-  if (remotes) {
-    for (const remote in remotes) {
-      const rootNode = {
-        name: '',
-        path: '',
-        isFolder: true,
-        level: -1,
-      } as BranchNode;
-      remoteTreeMap[remote] = rootNode;
-      for (const branch of remotes[remote].branches) {
-        buildTree(rootNode, '', branch, 1);
-      }
-    }
-  }
-
-  return (
-    <div className={props.className} style={{ borderBottom: '1px solid #444' }}>
-      <StyledRepositoryDataPanelGroupButton
-        onClick={() => setExpanded(!expanded)}
-      >
-        {props.label}
-      </StyledRepositoryDataPanelGroupButton>
-      <StyledCollapse in={expanded}>
-        {remotes &&
-          Object.keys(remotes).map((remote) => (
-            <StyledTreeView
-              key={remote}
-              disableSelection={true}
-              defaultCollapseIcon={<ExpandMoreIcon />}
-              defaultExpandIcon={<ChevronRightIcon />}
-            >
-              <StyledTreeItem
-                nodeId={remote}
-                key={remote}
-                label={remote}
-                level={0}
-              >
-                {buildTreeView(remoteTreeMap[remote]?.children ?? [])}
-              </StyledTreeItem>
-            </StyledTreeView>
-          ))}
-      </StyledCollapse>
-    </div>
-  );
-};
-
-type RepositoryDataPanelProps = {} & React.ComponentPropsWithoutRef<'div'>;
-
-type BranchNode = {
-  level: number;
-  path: string;
-  name: string;
-  children?: BranchNode[];
-  isFolder: boolean;
-};
-
 const buildTree = (
   root: BranchNode,
   prefix: string,
@@ -189,6 +67,151 @@ const buildTree = (
     buildTree(existingChild, newPrefix, newPath, level + 1);
   }
 };
+
+const buildTreeView = (node: BranchNode[]) => {
+  return node.map((x) => (
+    <StyledTreeItem nodeId={x.path} label={x.name} key={x.path} level={x.level}>
+      {x.children && buildTreeView(x.children)}
+    </StyledTreeItem>
+  ));
+};
+
+type RepositoryDataPanelLocalBranchesGroupProps = {
+  label: string;
+  data?: string[];
+  expanded?: boolean;
+} & React.ComponentPropsWithoutRef<'div'>;
+
+const RepositoryDataPanelLocalBranchesGroup = ({
+  className,
+  label,
+  data = [],
+  expanded = false,
+}: RepositoryDataPanelLocalBranchesGroupProps) => {
+  const [isExpanded, setExpanded] = useState(expanded);
+
+  const localBranchTree: BranchNode = {
+    name: '',
+    path: '',
+    isFolder: true,
+    level: -1,
+  };
+  const localBranches = data;
+
+  if (localBranches) {
+    localBranches.forEach((branch) => {
+      buildTree(localBranchTree, '', branch, 0);
+    });
+  }
+
+  return (
+    <div className={className} style={{ borderBottom: '1px solid #444' }}>
+      <StyledRepositoryDataPanelGroupButton
+        onClick={() => setExpanded(!isExpanded)}
+      >
+        {label}
+      </StyledRepositoryDataPanelGroupButton>
+      <StyledCollapse in={isExpanded}>
+        <StyledTreeView
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+        >
+          {buildTreeView(localBranchTree.children ?? [])}
+        </StyledTreeView>
+      </StyledCollapse>
+    </div>
+  );
+};
+
+RepositoryDataPanelLocalBranchesGroup.defaultProps = {
+  data: null,
+  expanded: false,
+};
+
+type RepositoryDataPanelRemoteBranchesGroupProps = {
+  label: string;
+  data?: IRemotes;
+  expanded?: boolean;
+} & React.ComponentPropsWithoutRef<'div'>;
+
+const RepositoryDataPanelRemoteBranchesGroup = (
+  props: RepositoryDataPanelRemoteBranchesGroupProps
+) => {
+  const { expanded, data, label, className } = props;
+  const [isExpanded, setExpanded] = useState(expanded);
+
+  const remotes = data;
+  const remoteTreeMap = {} as { [remote: string]: BranchNode };
+
+  if (remotes) {
+    Object.keys(remotes).forEach((remote) => {
+      const rootNode = {
+        name: '',
+        path: '',
+        isFolder: true,
+        level: -1,
+      } as BranchNode;
+      remoteTreeMap[remote] = rootNode;
+      remotes[remote].branches.forEach((branch) => {
+        buildTree(rootNode, '', branch, 1);
+      });
+    });
+  }
+
+  return (
+    <div className={className} style={{ borderBottom: '1px solid #444' }}>
+      <StyledRepositoryDataPanelGroupButton
+        onClick={() => setExpanded(!isExpanded)}
+      >
+        {label}
+      </StyledRepositoryDataPanelGroupButton>
+      <StyledCollapse in={isExpanded}>
+        {remotes &&
+          Object.keys(remotes).map((remote) => (
+            <StyledTreeView
+              key={remote}
+              disableSelection
+              defaultCollapseIcon={<ExpandMoreIcon />}
+              defaultExpandIcon={<ChevronRightIcon />}
+            >
+              <StyledTreeItem
+                nodeId={remote}
+                key={remote}
+                label={remote}
+                level={0}
+              >
+                {buildTreeView(remoteTreeMap[remote]?.children ?? [])}
+              </StyledTreeItem>
+            </StyledTreeView>
+          ))}
+      </StyledCollapse>
+    </div>
+  );
+};
+
+RepositoryDataPanelRemoteBranchesGroup.defaultProps = {
+  data: null,
+  expanded: false,
+};
+
+const DataPanelHeaderLabel = styled(
+  (props: React.ComponentPropsWithoutRef<'div'>) => (
+    <div className={props.className}>{props.children}</div>
+  )
+)`
+  align-self: center;
+`;
+
+type RepositoryDataPanelProps = React.ComponentPropsWithoutRef<'div'>;
+
+type BranchNode = {
+  level: number;
+  path: string;
+  name: string;
+  children?: BranchNode[];
+  isFolder: boolean;
+};
+
 type DataPanelHeaderProps = {
   label: string;
 } & React.ComponentPropsWithoutRef<'div'>;
@@ -205,31 +228,27 @@ const StyledDataPanelHeader = styled((props: DataPanelHeaderProps) => (
   margin-bottom: 5px;
 `;
 
-const DataPanelHeaderLabel = styled(
-  (props: React.ComponentPropsWithoutRef<'div'>) => (
-    <div {...props}>{props.children}</div>
-  )
-)`
-  align-self: center;
-`;
-
-export const RepositoryDataPanel = (props: RepositoryDataPanelProps) => {
+const RepositoryDataPanel = (props: RepositoryDataPanelProps) => {
   const { repo } = useSelector<any, SelectedRepoStateInterface>(
     (state: any) => state.selectedRepository
   );
 
+  const { className } = props;
+
   return (
-    <div className={props.className}>
-      <StyledDataPanelHeader label="Data panel"></StyledDataPanelHeader>
+    <div className={className}>
+      <StyledDataPanelHeader label="Data panel" />
       <RepositoryDataPanelLocalBranchesGroup
         expanded
         label="+ Local"
         data={repo?.branches.local}
-      ></RepositoryDataPanelLocalBranchesGroup>
+      />
       <RepositoryDataPanelRemoteBranchesGroup
         label="+ Remote"
         data={repo?.branches.remotes}
-      ></RepositoryDataPanelRemoteBranchesGroup>
+      />
     </div>
   );
 };
+
+export default RepositoryDataPanel;

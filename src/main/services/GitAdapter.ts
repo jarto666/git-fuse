@@ -24,9 +24,9 @@ export class GitAdapter {
     const remotes = (await this._git.getRemotes()).map((x) => x.name);
     const remoteUrls = <any>{};
     for (const remote of remotes) {
-      remoteUrls[remote] = (
-        await this._git.getConfig(`remote.${remote}.url`)
-      ).value;
+      // TODO: Parallelize
+      remoteUrls[remote] = // eslint-disable-next-line no-await-in-loop
+        (await this._git.getConfig(`remote.${remote}.url`)).value;
     }
     const remoteBranches = (await this._git.branch(['-r'])).all;
 
@@ -60,7 +60,7 @@ export class GitAdapter {
   // ---------------- Repo info
 
   async getPath(): Promise<string> {
-    return await this._git.revparse(['--show-toplevel']);
+    return this._git.revparse(['--show-toplevel']);
   }
 
   readonly COMMIT_INFO_DELIMITER: string = '.2[K~E&jnp+$F3@fy#KRzfg';
@@ -71,7 +71,7 @@ export class GitAdapter {
 
   async _getHeads(): Promise<HeadsInfo> {
     const localHeadsRaw = await this._git.raw(['show-ref', '--heads']);
-    let values: HeadsInfo = {};
+    const values: HeadsInfo = {};
     localHeadsRaw
       .trim()
       .split('\n')
@@ -87,6 +87,8 @@ export class GitAdapter {
 
     const remotes = await this._getRemotes();
     for (const remote of remotes) {
+      // TODO: Parallelize
+      // eslint-disable-next-line no-await-in-loop
       const remoteHeadsRaw = await this._git.raw([
         'ls-remote',
         '--heads',
@@ -121,7 +123,7 @@ export class GitAdapter {
       `--pretty=format:"${requestData.join(this.COMMIT_INFO_DELIMITER)}"`,
     ]);
 
-    let result: IGitCommit[] = [];
+    const result: IGitCommit[] = [];
     commitLines
       .trim()
       .split('\n')
@@ -156,7 +158,7 @@ export class GitAdapter {
     return result;
   }
   async getLog(): Promise<IGitCommit[]> {
-    return await this._getCommits();
+    return this._getCommits();
   }
 }
 

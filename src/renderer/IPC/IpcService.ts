@@ -3,6 +3,7 @@ import { IpcRequest } from 'main/IPC/ipcRequest';
 export class IpcService {
   private ipcRenderer?: IpcRendererCustom;
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   public send<TRequest = {}, TResponse = {}>(
     channel: string,
     request: TRequest,
@@ -16,9 +17,8 @@ export class IpcService {
       body: request,
     };
 
-    ipcRequest.responseChannel = responseChannel
-      ? responseChannel
-      : `${channel}_response_${new Date().getTime()}`;
+    ipcRequest.responseChannel =
+      responseChannel || `${channel}_response_${new Date().getTime()}`;
 
     const ipcRenderer = this.ipcRenderer!;
     ipcRenderer.sendMessage(channel, ipcRequest);

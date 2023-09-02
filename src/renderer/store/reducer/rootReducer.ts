@@ -1,10 +1,10 @@
-import openReposSlice from './openReposSlice';
-import selectedRepoSlice from './selectedRepoSlice';
+import openRepos from './openReposSlice';
+import selectedRepository from './selectedRepoSlice';
 
 const rootReducer = () => {
   return {
-    openRepos: openReposSlice,
-    selectedRepository: selectedRepoSlice,
+    openRepos,
+    selectedRepository,
   };
 };
 

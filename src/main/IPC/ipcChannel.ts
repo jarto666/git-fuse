@@ -1,6 +1,7 @@
 import { IpcMainEvent } from 'electron';
 import { IpcRequest } from './ipcRequest';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export abstract class IpcChannelBase<TRequest = {}, TResponse = {}> {
   abstract get name(): string;
 

@@ -1,5 +1,7 @@
 import { catchError, from, map, mergeMap, of } from 'rxjs';
 import { ofType } from 'redux-observable';
+import FakeRepositoryService from 'renderer/services/FakeRepositoryService';
+import { IRepository } from 'shared/interfaces/IRepository';
 import {
   closeOpenedRepoFailedAction,
   closeOpenedRepoRequestAction,
@@ -11,22 +13,19 @@ import {
   setSelectedRepoRequestAction,
   setSelectedRepoSuccessAction,
 } from '../reducer/openReposSlice';
-import FakeRepositoryService from 'renderer/services/FakeRepositoryService';
-import { IRepository } from 'shared/interfaces/IRepository';
 
-export const openReposEpic = (action$: any, state$: any) => {
+export const openReposEpic = (action$: any) => {
   return action$.pipe(
     ofType(getOpenedReposRequestAction),
-    mergeMap((action: any) =>
+    mergeMap(() =>
       from(FakeRepositoryService.getOpenedRepos()).pipe(
         map((response: IRepository[]) => {
           if (response) {
             return getOpenedReposSuccessAction(response);
-          } else {
-            throw response;
           }
+          throw response;
         }),
-        catchError((err) => {
+        catchError(() => {
           return of(getOpenedReposFailedAction());
         })
       )
@@ -34,7 +33,7 @@ export const openReposEpic = (action$: any, state$: any) => {
   );
 };
 
-export const closeOpenedRepoEpic = (action$: any, state$: any) => {
+export const closeOpenedRepoEpic = (action$: any) => {
   return action$.pipe(
     ofType(closeOpenedRepoRequestAction),
     mergeMap((action: any) => {
@@ -42,11 +41,10 @@ export const closeOpenedRepoEpic = (action$: any, state$: any) => {
         map((response: any) => {
           if (response) {
             return closeOpenedRepoSuccessAction(response);
-          } else {
-            throw response;
           }
+          throw response;
         }),
-        catchError((err) => {
+        catchError(() => {
           return of(closeOpenedRepoFailedAction());
         })
       );
@@ -54,7 +52,7 @@ export const closeOpenedRepoEpic = (action$: any, state$: any) => {
   );
 };
 
-export const setSelectedRepoEpic = (action$: any, state$: any) => {
+export const setSelectedRepoEpic = (action$: any) => {
   return action$.pipe(
     ofType(setSelectedRepoRequestAction),
     mergeMap((action: any) => {
@@ -62,11 +60,10 @@ export const setSelectedRepoEpic = (action$: any, state$: any) => {
         map((response: any) => {
           if (response) {
             return setSelectedRepoSuccessAction(response);
-          } else {
-            throw response;
           }
+          throw response;
         }),
-        catchError((err) => {
+        catchError(() => {
           return of(setSelectedRepoFailedAction());
         })
       );

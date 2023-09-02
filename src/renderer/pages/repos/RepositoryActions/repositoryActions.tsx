@@ -1,42 +1,52 @@
-import { Styles as S } from './styles';
+import {
+  StyledRepositoryActionsPanel,
+  StyledRepositoryActionList,
+  StyledRepositoryActionListItem,
+  StyledPullIcon,
+  StyledRepositoryActionListItemLabel,
+  StyledPushIcon,
+  StyledBranchIcon,
+  StyledStashIcon,
+  StyledResetIcon,
+} from './styles';
 
 export const RepositoryActionsPanel = () => {
   return (
     <>
-      <S.RepositoryActionsPanel>
-        <S.RepositoryActionList>
-          <S.RepositoryActionListItem>
-            <S.PullIcon></S.PullIcon>
-            <S.RepositoryActionListItemLabel>
+      <StyledRepositoryActionsPanel>
+        <StyledRepositoryActionList>
+          <StyledRepositoryActionListItem>
+            <StyledPullIcon />
+            <StyledRepositoryActionListItemLabel>
               Pull
-            </S.RepositoryActionListItemLabel>
-          </S.RepositoryActionListItem>
-          <S.RepositoryActionListItem>
-            <S.PushIcon></S.PushIcon>
-            <S.RepositoryActionListItemLabel>
+            </StyledRepositoryActionListItemLabel>
+          </StyledRepositoryActionListItem>
+          <StyledRepositoryActionListItem>
+            <StyledPushIcon />
+            <StyledRepositoryActionListItemLabel>
               Push
-            </S.RepositoryActionListItemLabel>
-          </S.RepositoryActionListItem>
-          <S.RepositoryActionListItem>
-            <S.BranchIcon></S.BranchIcon>
-            <S.RepositoryActionListItemLabel>
+            </StyledRepositoryActionListItemLabel>
+          </StyledRepositoryActionListItem>
+          <StyledRepositoryActionListItem>
+            <StyledBranchIcon />
+            <StyledRepositoryActionListItemLabel>
               Branch
-            </S.RepositoryActionListItemLabel>
-          </S.RepositoryActionListItem>
-          <S.RepositoryActionListItem>
-            <S.StashIcon></S.StashIcon>
-            <S.RepositoryActionListItemLabel>
+            </StyledRepositoryActionListItemLabel>
+          </StyledRepositoryActionListItem>
+          <StyledRepositoryActionListItem>
+            <StyledStashIcon />
+            <StyledRepositoryActionListItemLabel>
               Stash
-            </S.RepositoryActionListItemLabel>
-          </S.RepositoryActionListItem>
-          <S.RepositoryActionListItem>
-            <S.ResetIcon></S.ResetIcon>
-            <S.RepositoryActionListItemLabel>
+            </StyledRepositoryActionListItemLabel>
+          </StyledRepositoryActionListItem>
+          <StyledRepositoryActionListItem>
+            <StyledResetIcon />
+            <StyledRepositoryActionListItemLabel>
               Reset
-            </S.RepositoryActionListItemLabel>
-          </S.RepositoryActionListItem>
-        </S.RepositoryActionList>
-      </S.RepositoryActionsPanel>
+            </StyledRepositoryActionListItemLabel>
+          </StyledRepositoryActionListItem>
+        </StyledRepositoryActionList>
+      </StyledRepositoryActionsPanel>
     </>
   );
 };

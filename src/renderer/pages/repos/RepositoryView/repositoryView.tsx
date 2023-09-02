@@ -10,17 +10,19 @@ const SpinnerContainer = styled('div')`
   align-items: center;
 `;
 
-export type RepositoryViewProps = {
+type RepositoryViewProps = {
   children: React.ReactNode;
   isLoading: boolean;
   className?: string;
 };
 
-export const RepositoryView = (props: RepositoryViewProps) => {
+const RepositoryView = (props: RepositoryViewProps) => {
+  const { className, isLoading, children } = props;
+
   return (
-    <div className={props.className}>
-      {!props.isLoading ? (
-        <>{props.children}</>
+    <div className={className}>
+      {!isLoading ? (
+        <>{children}</>
       ) : (
         <SpinnerContainer>
           <CircularProgress color="secondary" />
@@ -29,3 +31,9 @@ export const RepositoryView = (props: RepositoryViewProps) => {
     </div>
   );
 };
+
+RepositoryView.defaultProps = {
+  className: null,
+};
+
+export default RepositoryView;

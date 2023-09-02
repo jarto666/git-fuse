@@ -36,7 +36,7 @@ const StyledTab = styled((props: StyledTabProps) => (
       <TabContainer
         data-tooltip-id={`tab_tooltip_${props.label}`}
         onMouseUp={(e) => {
-          if (e.button == 1 || (e.button & 2) == 1) {
+          if (e.button === 1 || (e.button & 2) === 1) {
             e.stopPropagation();
             props.onClose(props.value);
           }
@@ -45,7 +45,7 @@ const StyledTab = styled((props: StyledTabProps) => (
         <span>{props.label}</span>
         <CloseButton
           onClick={(e) => {
-            if (e.button == 1 || (e.button & 2) == 1) {
+            if (e.button === 1 || (e.button & 2) === 1) {
               return;
             }
             e.stopPropagation();

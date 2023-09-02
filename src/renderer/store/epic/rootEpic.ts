@@ -6,7 +6,7 @@ import {
 } from './openReposEpic';
 import { getSelectedRepoEpic } from './selectedRepoEpic';
 
-export const rootEpic = combineEpics(
+const rootEpic = combineEpics(
   // open repos
   openReposEpic,
   closeOpenedRepoEpic,
@@ -15,3 +15,5 @@ export const rootEpic = combineEpics(
   // selected repo
   getSelectedRepoEpic
 );
+
+export default rootEpic;

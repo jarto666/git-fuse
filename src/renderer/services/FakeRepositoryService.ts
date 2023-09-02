@@ -41,9 +41,9 @@ export default class FakeRepositoryService {
     // FakeRepositoryService.repos = [...FakeRepositoryService.repos].sort(
     //   (a, b) => a.order - b.order
     // );
-    let responseData: IRepository[] = FakeRepositoryService.repos;
+    const responseData: IRepository[] = FakeRepositoryService.repos;
 
-    return new Promise<IRepository[]>((resolve, _) => {
+    return new Promise<IRepository[]>((resolve) => {
       setTimeout(resolve, 0, responseData);
     }).catch((err) => {
       throw new Error(err);
@@ -52,10 +52,10 @@ export default class FakeRepositoryService {
 
   static closeRepo = (id: string) => {
     FakeRepositoryService.repos = FakeRepositoryService.repos.filter(
-      (x) => x.id != id
+      (x) => x.id !== id
     );
-    let responseData = FakeRepositoryService.repos;
-    return new Promise((resolve, _) => {
+    const responseData = FakeRepositoryService.repos;
+    return new Promise((resolve) => {
       setTimeout(resolve, 0, responseData);
     }).catch((err) => {
       throw new Error(err);
@@ -63,8 +63,8 @@ export default class FakeRepositoryService {
   };
 
   static setSelected = (id: string): Promise<IRepository> => {
-    let repo = FakeRepositoryService.repos.find((x) => x.id === id);
-    return new Promise<IRepository>((resolve, _) => {
+    const repo = FakeRepositoryService.repos.find((x) => x.id === id);
+    return new Promise<IRepository>((resolve) => {
       FakeRepositoryService.selectedRepo = repo!;
       setTimeout(resolve, 0, FakeRepositoryService.selectedRepo);
     }).catch((err) => {
@@ -73,9 +73,9 @@ export default class FakeRepositoryService {
   };
 
   static getById = async (id: string): Promise<IRepositoryDetails> => {
-    let repo = FakeRepositoryService.repos.find((x) => x.id === id);
+    const repo = FakeRepositoryService.repos.find((x) => x.id === id);
 
-    let ipc = new IpcService();
+    const ipc = new IpcService();
     const response = await ipc.send<
       GetRepositoryInfoChannelRequest,
       GetRepositoryInfoChannelResponse
