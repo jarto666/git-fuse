@@ -149,10 +149,12 @@ type GraphCanvasProps = {
   children:
     | ((context: CanvasRenderingContext2D | null) => void)
     | React.ReactNode;
+  height: number;
+  width: number;
 };
 
 const GraphCanvas = (props: GraphCanvasProps) => {
-  const { children } = props;
+  const { children, height, width } = props;
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -170,7 +172,7 @@ const GraphCanvas = (props: GraphCanvasProps) => {
     }
   }, [children]);
 
-  return <canvas ref={canvasRef} width={300} height={22000} />;
+  return <canvas ref={canvasRef} width={width} height={height} />;
 };
 
 type GraphViewerProps = {
@@ -192,6 +194,14 @@ const GraphViewer = (props: GraphViewerProps) => {
       ])
     );
   }, [commitNodes]);
+
+  const maxLevel = useMemo(() => {
+    const vertices = Object.values(commitVertexMap);
+    if (vertices.length === 0) {
+      return 0;
+    }
+    return Math.max(...vertices.map((vertex) => vertex.level));
+  }, [commitVertexMap]);
 
   const edges: Edge[] = useMemo(() => {
     return commitNodes
@@ -217,7 +227,10 @@ const GraphViewer = (props: GraphViewerProps) => {
 
   const GraphCanvasMemo = useMemo(() => {
     return (
-      <GraphCanvas>
+      <GraphCanvas
+        width={maxLevel * (Vertex.OFFSET_X_GAP + Vertex.LEVEL_WIDTH)}
+        height={Vertex.LINE_HEIGHT * commits.length}
+      >
         {(context) => {
           edges.forEach((edge) => {
             edge.draw(context);
@@ -229,7 +242,7 @@ const GraphViewer = (props: GraphViewerProps) => {
         }}
       </GraphCanvas>
     );
-  }, [commitVertexMap, edges]);
+  }, [commitVertexMap, commits.length, edges, maxLevel]);
 
   if (!commits) {
     return <div>----</div>;

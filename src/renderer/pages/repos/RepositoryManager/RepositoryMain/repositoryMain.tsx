@@ -23,6 +23,7 @@ const StyledBody = styled('div')`
   height: 100%;
   display: flex;
   flex-direction: row;
+  overflow-y: auto;
 `;
 
 export interface RepositoryMainPanelProps
@@ -52,7 +53,7 @@ const RepositoryMainPanel = (props: RepositoryMainPanelProps) => {
           {selectedRepoState.error ? (
             <span>Error: {selectedRepoState.error.message}</span>
           ) : (
-            <div>
+            <>
               <StyledHeaders />
               <StyledBody>
                 <StyledGraphColumn
@@ -62,7 +63,7 @@ const RepositoryMainPanel = (props: RepositoryMainPanelProps) => {
                 </StyledGraphColumn>
                 <CommitTable commits={commits} />
               </StyledBody>
-            </div>
+            </>
           )}
         </div>
       </WidthContext.Provider>

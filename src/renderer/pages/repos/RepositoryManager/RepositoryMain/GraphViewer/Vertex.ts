@@ -43,8 +43,9 @@ const valueToColorHex = (value: number): string => {
 
 class Vertex {
   static readonly OFFSET_X_GAP: number = 5;
-  static readonly RADIUS: number = 5;
+  static readonly RADIUS: number = 4;
   static readonly LINE_HEIGHT: number = 20;
+  static readonly LEVEL_WIDTH: number = Vertex.OFFSET_X_GAP + Vertex.RADIUS * 2;
 
   id: string;
   color: string;
@@ -56,8 +57,7 @@ class Vertex {
     this.color = valueToColorHex(level);
     this.id = id;
 
-    const offsetX =
-      Vertex.OFFSET_X_GAP + level * (Vertex.OFFSET_X_GAP + Vertex.RADIUS * 2);
+    const offsetX = Vertex.OFFSET_X_GAP + level * Vertex.LEVEL_WIDTH;
     const offsetY =
       sequence * Vertex.LINE_HEIGHT + (Vertex.LINE_HEIGHT / 2 - Vertex.RADIUS);
     this.position = { x: offsetX + Vertex.RADIUS, y: offsetY + Vertex.RADIUS };
